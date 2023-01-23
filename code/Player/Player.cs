@@ -12,6 +12,8 @@ public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
 
+	[BindComponent] public IdahoidStats Stats { get; }
+
 	public override void Spawn()
 	{
 		Predictable = true;
@@ -25,6 +27,8 @@ public partial class Idahoid : AnimatedEntity
 		EnableHitboxes = true;
 
 		Tags.Add( "player" );
+
+		CreateComponents();
 	}
 
 	public void Respawn()
@@ -40,6 +44,11 @@ public partial class Idahoid : AnimatedEntity
 			.ToList()
 			.ForEach( x => x.EnableDrawing = true );
 
+		ResetInterpolation();
+	}
+
+	private void CreateComponents()
+	{
 		Components.Create<PlayerController>();
 
 		Components.RemoveAny<PlayerControllerMechanic>();
@@ -51,7 +60,8 @@ public partial class Idahoid : AnimatedEntity
 		Components.Create<CrouchMechanic>();
 		Components.Create<InteractionMechanic>();
 
-		ResetInterpolation();
+		// Initializing stats depends on the mechanic components already existing.
+		Components.Create<IdahoidStats>();
 	}
 
 	public override void Simulate( IClient cl )

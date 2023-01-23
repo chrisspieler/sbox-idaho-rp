@@ -1,0 +1,14 @@
+C:\Program Files (x86)\Steam\steamapps\common\sbox\.vs\output\idaho_rp.xml
+C:\Program Files (x86)\Steam\steamapps\common\sbox\.vs\output\idaho_rp.deps.json
+C:\Program Files (x86)\Steam\steamapps\common\sbox\.vs\output\idaho_rp.dll
+C:\Program Files (x86)\Steam\steamapps\common\sbox\.vs\output\idaho_rp.pdb
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.csproj.AssemblyReference.cache
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.GeneratedMSBuildEditorConfig.editorconfig
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.AssemblyInfoInputs.cache
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.AssemblyInfo.cs
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.csproj.CoreCompileInputs.cache
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.csproj.CopyComplete
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.dll
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\refint\idaho_rp.dll
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\idaho_rp.pdb
+c:\users\chris\documents\s&box projects\idaho_rp\code\obj\Debug\ref\idaho_rp.dll
