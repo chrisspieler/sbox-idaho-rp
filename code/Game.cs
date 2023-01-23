@@ -24,7 +24,8 @@ public partial class IdahoRP : BaseGameManager
 		var allSpawnPoints = Entity.All.OfType<SpawnPoint>();
 		var randomSpawnPoint = allSpawnPoints.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
 
-		pawn.Position = randomSpawnPoint.Position;
+		pawn.Position = randomSpawnPoint.Position.WithZ(randomSpawnPoint.Position.z + 32f);
+		pawn.Respawn();
 	}
 
 	public override void Shutdown()
