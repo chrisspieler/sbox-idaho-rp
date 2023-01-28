@@ -13,6 +13,9 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 	public Vector3 BaseVelocity { get; set; }
 	public Vector3 GroundNormal { get; set; }
 	public float CurrentGroundAngle { get; set; }
+	public Vector3 CurrentGroundNormal { get; set; }
+	public float Upness { get; set; }
+	public float MaxGroundAngle { get; set; } = 33f;
 
 	public Idahoid Player => Entity;
 
@@ -195,11 +198,36 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 		if ( zeroPitch )
 			result.z = 0;
 
-		result = result.Normal * inSpeed;
+
+		result = result * inSpeed;
 		result *= GetWishSpeed();
 
-		var ang = CurrentGroundAngle.Remap( 0, 45, 1, 0.6f );
-		result *= ang;
+		var speedMax = 1f;
+
+		// If we're on a slope
+		if (CurrentGroundAngle != 0f)
+		{
+			Vector3 slopeSideways = Vector3.Cross( Vector3.Down, CurrentGroundNormal );
+			Vector3 slopeDown = Vector3.Cross( CurrentGroundNormal, slopeSideways ).Normal;
+			var eyeRot = Rotation.From( Camera.Rotation.Angles().WithPitch( 0 ) );
+			var facingDir = Input.AnalogMove * MoveInputScale * eyeRot;
+			facingDir = facingDir.Normal;
+			Log.Info( $"Slope down: {slopeDown}, Facing dir: {facingDir}" );
+			// On a scale from 0 to 1, how directly up the slope are we travelling?
+			Upness = (Vector3.Dot(facingDir, -slopeDown ) + 1) / 2;
+			// Gain a speed boost when moving downhill.
+			
+			speedMax = MathX.Lerp( speedMax * 1.5f, speedMax, Upness );
+			var speedMin = CurrentGroundAngle.Remap( 0, MaxGroundAngle, 1f, 0.6f );
+			result *= MathX.Lerp( speedMin, speedMax, Upness );
+		}
+		else
+		{
+			Upness = 0.5f;
+		}
+
+		var slopeSpeedFactor = CurrentGroundAngle.Remap( 0, MaxGroundAngle, speedMax, 0.6f );
+		result *= slopeSpeedFactor;
 
 		return result;
 	}

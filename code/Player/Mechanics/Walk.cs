@@ -10,7 +10,6 @@ public partial class WalkMechanic : PlayerControllerMechanic
 {
 	public float StopSpeed { get; set; } = 150f;
 	public float StepSize { get; set; } = 18.0f;
-	public float GroundAngle { get; set; } = 33.0f;
 	public float DefaultSpeed { get; set; } = 280f;
 	public float WalkSpeed { get; set; } = 80f;
 	public float GroundFriction { get; set; } = 4.0f;
@@ -52,7 +51,7 @@ public partial class WalkMechanic : PlayerControllerMechanic
 		if ( trace.Fraction <= 0 ) return;
 		if ( trace.Fraction >= 1 ) return;
 		if ( trace.StartedSolid ) return;
-		if ( Vector3.GetAngle( Vector3.Up, trace.Normal ) > GroundAngle ) return;
+		if ( Vector3.GetAngle( Vector3.Up, trace.Normal ) > Controller.MaxGroundAngle ) return;
 
 		Controller.Position = trace.EndPosition;
 	}
@@ -162,8 +161,9 @@ public partial class WalkMechanic : PlayerControllerMechanic
 
 		var angle = Vector3.GetAngle( Vector3.Up, pm.Normal );
 		Controller.CurrentGroundAngle = angle;
+		Controller.CurrentGroundNormal = pm.Normal;
 
-		if ( pm.Entity == null || Vector3.GetAngle( Vector3.Up, pm.Normal ) > GroundAngle )
+		if ( pm.Entity == null || Vector3.GetAngle( Vector3.Up, pm.Normal ) > Controller.MaxGroundAngle )
 		{
 			ClearGroundEntity();
 			bMoveToEndPos = false;

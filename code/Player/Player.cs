@@ -11,9 +11,8 @@ namespace IdahoRP;
 public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
-
 	[BindComponent] public IdahoidStats Stats { get; }
-
+	[Net] private PlayerStatModifier _goatMod { get; set; }
 	public override void Spawn()
 	{
 		Predictable = true;
@@ -29,6 +28,8 @@ public partial class Idahoid : AnimatedEntity
 		Tags.Add( "player" );
 
 		CreateComponents();
+
+		_goatMod = ResourceLibrary.Get<PlayerStatModifier>( "data/goat/goat_climb.statmod");
 	}
 
 	public void Respawn()
@@ -38,7 +39,6 @@ public partial class Idahoid : AnimatedEntity
 		Health = 100;
 		LifeState = LifeState.Alive;
 		EnableAllCollisions = true;
-		EnableDrawing = false;
 
 		Children.OfType<ModelEntity>()
 			.ToList()
@@ -67,6 +67,11 @@ public partial class Idahoid : AnimatedEntity
 	public override void Simulate( IClient cl )
 	{
 		Controller?.Simulate( cl );
+
+		if (Input.Pressed(InputButton.Slot1))
+		{
+			Stats.AddModifier( _goatMod );
+		}
 	}
 
 	public override void FrameSimulate( IClient cl )

@@ -22,7 +22,7 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 	{
 		{ PlayerStat.MaxClimbAngle, 33.0f }
 	};
-	private Dictionary<PlayerStat, List<PlayerStatModifier>> _activeModifiers = new()
+	private Dictionary<PlayerStat, List<PlayerStatModifier>> _activeModifiers { get; set; } = new()
 	{
 		{ PlayerStat.MaxClimbAngle, new List<PlayerStatModifier>() }
 	};
@@ -36,7 +36,7 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 		_statSetters[stat]( value );
 	}
 
-	private WalkMechanic _walkMechanic;
+	private PlayerController _playerController;
 
 	public void RecalculateStat(PlayerStat stat )
 	{
@@ -50,6 +50,7 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 
 	public void AddModifier(PlayerStatModifier statMod, bool recalculateStat = true)
 	{
+		Log.Info( $"Adding modifier {statMod} to player {Entity}" );
 		_activeModifiers[statMod.TargetStat].Add(statMod);
 		if ( recalculateStat )
 		{
@@ -70,14 +71,14 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 	{
 		base.OnActivate();
 
-		_walkMechanic = Entity.Components.Get<WalkMechanic>();
+		_playerController = Entity.Components.Get<PlayerController>();
 		_statSetters = new()
 		{
-			{ PlayerStat.MaxClimbAngle, (p) => _walkMechanic.WalkSpeed = p }
+			{ PlayerStat.MaxClimbAngle, (p) => _playerController.MaxGroundAngle = p }
 		};
 		_statGetters = new()
 		{
-			{ PlayerStat.MaxClimbAngle, () => _walkMechanic.WalkSpeed  }
+			{ PlayerStat.MaxClimbAngle, () => _playerController.MaxGroundAngle  }
 		};
 	}
 }
