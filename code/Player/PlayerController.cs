@@ -2,6 +2,7 @@ using Sandbox;
 using IdahoRP.Mechanics;
 using System.Collections.Generic;
 using System.Linq;
+using IdahoRP.Utilities;
 
 namespace IdahoRP;
 
@@ -55,6 +56,9 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 
 	[ConVar.Replicated( "playercontroller_debug" )]
 	public static bool Debug { get; set; } = false;
+
+	[ConVar.Client( "cl_irp_movement_ddraw" )]
+	private static bool _movementDebugDraw { get; set; } = true;
 
 	public float BodyGirth => 32f;
 
@@ -207,27 +211,34 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 		// If we're on a slope
 		if (CurrentGroundAngle != 0f)
 		{
-			Vector3 slopeSideways = Vector3.Cross( Vector3.Down, CurrentGroundNormal );
+			Vector3 slopeSideways = Vector3.Cross( Vector3.Down, CurrentGroundNormal ).Normal;
 			Vector3 slopeDown = Vector3.Cross( CurrentGroundNormal, slopeSideways ).Normal;
+			if ( _movementDebugDraw )
+			{
+				DebugOverlay.DrawVector( Position, Position + CurrentGroundNormal * 10.0f, Color.Red, 1.0f );
+				DebugOverlay.DrawVector( Position, Position + slopeSideways * 10.0f, Color.Blue, 2.5f );
+				DebugOverlay.DrawVector( Position, Position + slopeDown * 10.0f, Color.Blue, 2.5f );
+				DebugOverlay.DrawVector( Position, Position + -slopeDown * 10.0f, Color.Blue, 2.5f );
+			}
 			var eyeRot = Rotation.From( Camera.Rotation.Angles().WithPitch( 0 ) );
 			var facingDir = Input.AnalogMove * MoveInputScale * eyeRot;
+			var rotToSlope = Rotation.FromAxis( CurrentGroundNormal, -CurrentGroundAngle );
+			facingDir *= rotToSlope;
 			facingDir = facingDir.Normal;
-			Log.Info( $"Slope down: {slopeDown}, Facing dir: {facingDir}" );
+			if ( _movementDebugDraw )
+				DebugOverlay.DrawVector( Position, Position + facingDir * 10.0f, Color.Green, 2.5f );
 			// On a scale from 0 to 1, how directly up the slope are we travelling?
 			Upness = (Vector3.Dot(facingDir, -slopeDown ) + 1) / 2;
 			// Gain a speed boost when moving downhill.
 			
 			speedMax = MathX.Lerp( speedMax * 1.5f, speedMax, Upness );
 			var speedMin = CurrentGroundAngle.Remap( 0, MaxGroundAngle, 1f, 0.6f );
-			result *= MathX.Lerp( speedMin, speedMax, Upness );
+			result *= MathX.Lerp( speedMax, speedMin, Upness );
 		}
 		else
 		{
 			Upness = 0.5f;
 		}
-
-		var slopeSpeedFactor = CurrentGroundAngle.Remap( 0, MaxGroundAngle, speedMax, 0.6f );
-		result *= slopeSpeedFactor;
 
 		return result;
 	}
