@@ -15,6 +15,12 @@ namespace IdahoRP.Jobs
 
 		public ClickerJob() : base( JOB_TITLE, JOB_DESC, JOB_INTERNAL_NAME ) { }
 
+		public override bool CheckRequirements( Idahoid player, out string reason )
+		{
+			reason = null;
+			return true;
+		}
+
 		public override void OffboardPlayer( Idahoid player )
 		{
 			throw new NotImplementedException();

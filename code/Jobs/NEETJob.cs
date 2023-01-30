@@ -12,6 +12,12 @@ public partial class NEETJob : Job
 
 	public NEETJob() : base( JOB_TITLE, JOB_DESC, JOB_INTERNAL_NAME ) { }
 
+	public override bool CheckRequirements( Idahoid player, out string reason )
+	{
+		reason = null;
+		return true;
+	}
+
 	public override void OffboardPlayer( Idahoid player )
 	{
 		throw new System.NotImplementedException();

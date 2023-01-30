@@ -3,6 +3,7 @@ using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ public partial class JobManager
 	{
 		IEnumerable<TypeDescription> jobTypes = TypeLibrary.GetTypes<Job>()
 			.Where( p => !p.IsAbstract );
-		foreach (var jobType in jobTypes)
+		foreach ( var jobType in jobTypes )
 		{
 			// [POLITICIAN NAME HERE] wishes they could do this! Ha ha!
 			// [OTHER POLITICAN NAME HERE] for [PUBLIC OFFICE] [NEAR FUTURE YEAR]!
@@ -53,18 +54,18 @@ public partial class JobManager
 	/// <summary>
 	/// Prints to the console a list of all of the available jobs in this session.
 	/// </summary>
-	[ConCmd.Server("joblist")]
+	[ConCmd.Server( "joblist" )]
 	public static void GetJobList()
 	{
 		Log.Info( $"Caller: {ConsoleSystem.Caller}" );
-		foreach(var kvp in _instance._jobs )
+		foreach ( var kvp in _instance._jobs )
 		{
 			var job = kvp.Value;
 			var jobId = job.InternalName;
 			var workerCount = _instance.GetWorkerCount( job );
 			var capacity = _instance.GetJobCapacity( job );
 			string strCapacity = capacity >= 0 ? capacity.ToString() : "Infinity";
-			Log.Info( $"{jobId, -16}:{workerCount,2}/{strCapacity,2}" );
+			Log.Info( $"{jobId,-16}:{workerCount,2}/{strCapacity,2}" );
 		}
 	}
 
@@ -73,13 +74,34 @@ public partial class JobManager
 	/// </summary>
 	/// <param name="job"></param>
 	/// <returns></returns>
-	public int GetJobCapacity(Job job)
+	public int GetJobCapacity( Job job )
 	{
 		if ( _jobCapacityOverrides.Keys.Contains( job.InternalName ) )
 			return _jobCapacityOverrides[job.InternalName];
 		else
 			return job.DefaultWorkerMax;
 	}
+
+	public bool IsMaxCapacity( Job job )
+	{
+		var capacity = GetJobCapacity( job );
+		var workerCount = GetWorkerCount( job );
+		return capacity >= 0 && workerCount >= capacity;
+	}
+
+	public bool IsMaxCapacity( string jobId ) => IsMaxCapacity( _jobs[jobId] );
+
+	private void SetJob( Job job, Idahoid player )
+	{
+		if (player.CurrentJob != null )
+		{
+			var oldJob = player.CurrentJob;
+			_workers[oldJob].Remove( player );
+		}
+		_workers[job].Add( player );
+		player.CurrentJob = job;
+	}
+	private void SetJob( string jobId, Idahoid player ) => SetJob( _jobs[jobId], player );
 
 	public int GetWorkerCount( Job job ) => _workers[job].Count;
 
@@ -93,16 +115,34 @@ public partial class JobManager
 	}
 
 	[ConCmd.Server("setjob")]
-	public static void SetJob(string jobIdentifier )
+	public static void TrySetJob(string jobId )
 	{
-		if ( !IdExists( jobIdentifier ) ) return;
-		// TODO: Check job capacity
-		// TODO: Check job requirements
-		// TODO: Handle leaving current job
-		var job = _instance._jobs[jobIdentifier];
-		var player = ConsoleSystem.Caller.Pawn as Idahoid;
-		Assert.NotNull( player );
-		_instance._workers[job].Add( player );
+		// Is the job ID invalid?
+		if ( !IdExists( jobId ) ) return;
+	    var player = ConsoleSystem.Caller.Pawn as Idahoid;
+		// Is there no player pawn for this caller?
+		if ( player == null )
+			return;
+		var job = _instance._jobs[jobId];
+		// Is the player already working this job?
+		if ( player.CurrentJob == job )
+		{
+			player.ShowToastMessage( $"You are already working the job \"{job.Title}\"!" );
+			return;
+		}
+		// Is this job full?
+		if ( _instance.IsMaxCapacity(jobId) )
+		{
+			player.ShowToastMessage( $"Job \"{job.Title}\" is already at its max capacity." );
+			return;
+		}
+		// Is the player otherwise ineligible to hold this job in particular?
+		if ( !job.CheckRequirements( player, out string rejectionReason ) )
+		{
+			player.ShowToastMessage( $"You are not qualified for the position of \"{job.Title}\".\nReason: {rejectionReason}" );
+			return;
+		}
+		_instance.SetJob(job, player);
 	}
 
 	[ConCmd.Admin("getworkers")]

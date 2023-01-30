@@ -1,6 +1,7 @@
 ﻿using IdahoRP.Utilities;
 using Sandbox;
 using Sandbox.Diagnostics;
+using Sandbox.UI.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,12 @@ public abstract partial class Job : BaseNetworkable
 	[Net] public int DefaultWorkerMax { get; set; } = -1;
 
 	/// <summary>
+	/// Returns true if the specified player is eligible to work this job, and false if not.
+	/// </summary>
+	/// <param name="player">The player whose eligibility for this job shall be assessed.</param>
+	public abstract bool CheckRequirements( Idahoid player, out string reason );
+
+	/// <summary>
 	/// The procedure that shall be followed whenever a player is assigned this job. 
 	/// </summary>
 	/// <param name="player">The player who shall be assigned this job.</param>
@@ -61,4 +68,6 @@ public abstract partial class Job : BaseNetworkable
 	/// </summary>
 	/// <param name="player">The player who shall no longer be assigned this job.</param>
 	public abstract void OffboardPlayer( Idahoid player );
+
+
 }
