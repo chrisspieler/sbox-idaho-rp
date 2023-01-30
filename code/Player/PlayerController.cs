@@ -58,7 +58,7 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 	public static bool Debug { get; set; } = false;
 
 	[ConVar.Client( "cl_irp_movement_ddraw" )]
-	private static bool _movementDebugDraw { get; set; } = true;
+	private static bool _movementDebugDraw { get; set; } = false;
 
 	public float BodyGirth => 32f;
 
@@ -193,7 +193,7 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 
 	public Vector3 GetWishVelocity( bool zeroPitch = false )
 	{
-		var result = new Vector3( Player.MoveInput.x, Player.MoveInput.y, 0 );
+		var result = new Vector3( Player.MoveInput.x, Player.MoveInput.y, 0 ).Normal;
 		result *= MoveInputScale;
 
 		var inSpeed = result.Length.Clamp( 0, 1 );

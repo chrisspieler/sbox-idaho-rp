@@ -11,7 +11,8 @@ namespace IdahoRP;
 
 public enum PlayerStat
 {
-	MaxClimbAngle
+	MaxClimbAngle,
+	MaxHealth
 }
 
 public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponent
@@ -20,11 +21,13 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 	private Dictionary<PlayerStat, Func<float>> _statGetters;
 	private Dictionary<PlayerStat, float> _baseStats = new()
 	{
-		{ PlayerStat.MaxClimbAngle, 33.0f }
+		{ PlayerStat.MaxClimbAngle, 33.0f },
+		{ PlayerStat.MaxHealth, 100.0f }
 	};
 	private Dictionary<PlayerStat, List<PlayerStatModifier>> _activeModifiers { get; set; } = new()
 	{
-		{ PlayerStat.MaxClimbAngle, new List<PlayerStatModifier>() }
+		{ PlayerStat.MaxClimbAngle, new List<PlayerStatModifier>() },
+		{ PlayerStat.MaxHealth, new List<PlayerStatModifier>() }
 	};
 
 	public float GetStat( PlayerStat stat )
@@ -74,11 +77,13 @@ public partial class IdahoidStats : EntityComponent<Idahoid>, ISingletonComponen
 		_playerController = Entity.Components.Get<PlayerController>();
 		_statSetters = new()
 		{
-			{ PlayerStat.MaxClimbAngle, (p) => _playerController.MaxGroundAngle = p }
+			{ PlayerStat.MaxClimbAngle, (p) => _playerController.MaxGroundAngle = p },
+			{ PlayerStat.MaxHealth, _ => { } } // TODO: Implement MaxHealth
 		};
 		_statGetters = new()
 		{
-			{ PlayerStat.MaxClimbAngle, () => _playerController.MaxGroundAngle  }
+			{ PlayerStat.MaxClimbAngle, () => _playerController.MaxGroundAngle  },
+			{ PlayerStat.MaxHealth, () => 100.0f } // TODO: Implement MaxHealth
 		};
 	}
 }

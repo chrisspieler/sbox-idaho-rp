@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace IdahoRP;
 
+[Title( "Idahomie" ), Icon( "emoji_people" )]
 /// <summary>
 /// A pawn representing a player in IdahoRP.
 /// </summary>

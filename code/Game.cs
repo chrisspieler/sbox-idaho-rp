@@ -1,4 +1,6 @@
-﻿using Sandbox;
+﻿using IdahoRP.Api;
+using IdahoRP.UI;
+using Sandbox;
 using Sandbox.UI.Construct;
 using System;
 using System.IO;
@@ -7,10 +9,23 @@ using System.Threading.Tasks;
 
 namespace IdahoRP;
 
-[Title( "Idahomie" ), Icon( "emoji_people" )]
 public partial class IdahoRP : BaseGameManager
 {
 	[ClientInput] public Vector3 InputDirection { get; protected set; }
+
+	private JobManager _jobs;
+
+	public IdahoRP()
+	{
+		if ( Game.IsClient )
+		{
+			_ = new Hud();
+		}
+		else
+		{
+			_jobs = new JobManager();
+		}
+	}
 
 	public override void ClientJoined( IClient cl )
 	{
