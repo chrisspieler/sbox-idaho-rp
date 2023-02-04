@@ -20,11 +20,11 @@ public partial class NEETJob : Job
 
 	public override void OffboardPlayer( Idahoid player )
 	{
-		throw new System.NotImplementedException();
+
 	}
 
 	public override void OnboardPlayer( Idahoid player )
 	{
-		throw new System.NotImplementedException();
+
 	}
 }

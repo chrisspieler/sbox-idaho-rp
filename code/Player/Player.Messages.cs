@@ -9,6 +9,12 @@ namespace IdahoRP;
 
 public partial class Idahoid
 {
+	public enum MessageLevel
+	{
+		Info,
+		Error
+	}
+
 	[ClientRpc] public void ShowModalMessage(string message ) => Log.Error( message );
-	[ClientRpc] public void ShowToastMessage( string message ) => Log.Error( message );
+	[ClientRpc] public void ShowToastMessage( string message, MessageLevel level = MessageLevel.Info ) => Log.Error( message );
 }

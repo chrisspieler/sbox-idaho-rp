@@ -1,0 +1,81 @@
+﻿@using System
+@using Sandbox;
+
+@inherits Sandbox.UI.Panel
+
+@namespace IdahoRP.UI
+<style>
+    StatusBar {
+        width: @(GetWidth())%;
+
+        background-color: color(0.05,0.05,0.05,1);
+        border-radius: 12px;
+        align-items: flex-start;
+        opacity: 1;
+    }
+
+    StatusBar:not(.max-value) {
+        height: 25px;
+        margin: 5px;
+        padding: 2px;
+    }
+
+    .fill {
+        height: 100%;
+        background-color: @FillColor.Hex;
+        border-radius: 12px;
+    }
+
+    .max-value {
+        height: 15px;
+        margin: 2px;
+        padding: 5px;
+    }
+</style>
+
+<root>
+    <div class="fill" style="width: @(GetPercent())%"></div>
+</root>
+
+@code {
+    public Func<float> GetCurrentValue { get; set; }
+    public Func<float> GetMaxValue { get; set; }
+    public Color FillColor { get; set; }
+    public float MaxDisplayWidthPercent = 75.0f;
+    public float MaxDisplayValue = 200f;
+
+    public float GetWidth()
+    {
+        float barValue = GetMaxValue.Invoke();
+        float barDisplayWidth = MathX.Remap(barValue, 0.0f, MaxDisplayValue, 0.0f, MaxDisplayWidthPercent);
+        return barDisplayWidth;
+    }
+
+    public float GetPercent()
+    {
+        if (GetCurrentValue == null || GetMaxValue == null)
+        {
+            return 0.0f;
+        }
+        var currentValue = GetCurrentValue.Invoke();
+        var maxValue = GetMaxValue.Invoke();
+
+        if (currentValue >= maxValue)
+        {
+            this.AddClass("max-value");
+        }
+        else
+        {
+            this.RemoveClass("max-value");
+        }
+
+        return currentValue / maxValue * 100.0f;
+    }
+
+    protected override int BuildHash()
+    {
+        var currentPercent = GetPercent();
+
+        return currentPercent.GetHashCode();
+    }
+}

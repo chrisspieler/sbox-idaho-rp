@@ -79,6 +79,13 @@ public partial class PlayerController : EntityComponent<Idahoid>, ISingletonComp
 		}
 	}
 
+	public PlayerStatModifier JumpStamRegenMod { get; set; } =
+		PlayerStatModifier
+			.Upon( PlayerStat.StaminaRegen )
+			.WithName( "Jump Exhaustion" )
+			.WithDescription( "You can't relax while airborne." )
+			.AsNullification();
+
 	public T GetMechanic<T>() where T : PlayerControllerMechanic
 	{
 		foreach ( var mechanic in Mechanics )

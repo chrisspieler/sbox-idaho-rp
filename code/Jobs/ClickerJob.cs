@@ -23,12 +23,12 @@ namespace IdahoRP.Jobs
 
 		public override void OffboardPlayer( Idahoid player )
 		{
-			throw new NotImplementedException();
+
 		}
 
 		public override void OnboardPlayer( Idahoid player )
 		{
-			throw new NotImplementedException();
+
 		}
 	}
 }

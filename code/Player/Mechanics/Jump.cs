@@ -8,12 +8,15 @@ namespace IdahoRP.Mechanics;
 public partial class JumpMechanic : PlayerControllerMechanic
 {
 	public override int SortOrder => 25;
+	public float JumpStaminaCost { get; set; } = 20.0f;
 	private float Gravity => 700f;
 
 	protected override bool ShouldStart()
 	{
 		if ( !Input.Pressed( InputButton.Jump ) ) return false;
 		if ( !Controller.GroundEntity.IsValid() ) return false;
+		if ( Player.GetStat( PlayerStat.Stamina ) < JumpStaminaCost )
+			return false;
 		return true;
 	}
 
@@ -28,5 +31,8 @@ public partial class JumpMechanic : PlayerControllerMechanic
 
 		Controller.GetMechanic<WalkMechanic>()
 			.ClearGroundEntity();
+
+		Player.OffsetStat( PlayerStat.Stamina, -JumpStaminaCost );
+		Player.AddBaseModifier( Controller.JumpStamRegenMod );
 	}
 }

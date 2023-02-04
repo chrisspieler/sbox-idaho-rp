@@ -1,4 +1,5 @@
 ﻿using IdahoRP.Mechanics;
+using IdahoRP.UI;
 using Sandbox;
 using System;
 using System.Linq;
@@ -12,8 +13,12 @@ namespace IdahoRP;
 public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
-	[BindComponent] public IdahoidStats Stats { get; }
-	[Net] private PlayerStatModifier _goatMod { get; set; }
+
+	public Idahoid()
+	{
+		InitializeStats();
+	}
+
 	public override void Spawn()
 	{
 		Predictable = true;
@@ -29,8 +34,7 @@ public partial class Idahoid : AnimatedEntity
 		Tags.Add( "player" );
 
 		CreateComponents();
-
-		_goatMod = ResourceLibrary.Get<PlayerStatModifier>( "data/goat/goat_climb.statmod");
+		Log.Info( "Hello, from Spawn!");
 	}
 
 	public void Respawn()
@@ -60,19 +64,23 @@ public partial class Idahoid : AnimatedEntity
 		Components.Create<SprintMechanic>();
 		Components.Create<CrouchMechanic>();
 		Components.Create<InteractionMechanic>();
+	}
 
-		// Initializing stats depends on the mechanic components already existing.
-		Components.Create<IdahoidStats>();
+	[ConCmd.Admin("sethealth")]
+	public static void SetHealth(float value )
+	{
+		var player = ConsoleSystem.Caller.Pawn as Idahoid;
+		if ( player == null )
+			return;
+		player.Health = value;
 	}
 
 	public override void Simulate( IClient cl )
 	{
 		Controller?.Simulate( cl );
 
-		if (Input.Pressed(InputButton.Slot1))
-		{
-			Stats.AddModifier( _goatMod );
-		}
+		TickRegen();
+		TickStatChanges();
 	}
 
 	public override void FrameSimulate( IClient cl )

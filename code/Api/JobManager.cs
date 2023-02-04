@@ -52,24 +52,6 @@ public partial class JobManager
 	}
 
 	/// <summary>
-	/// Prints to the console a list of all of the available jobs in this session.
-	/// </summary>
-	[ConCmd.Server( "joblist" )]
-	public static void GetJobList()
-	{
-		Log.Info( $"Caller: {ConsoleSystem.Caller}" );
-		foreach ( var kvp in _instance._jobs )
-		{
-			var job = kvp.Value;
-			var jobId = job.InternalName;
-			var workerCount = _instance.GetWorkerCount( job );
-			var capacity = _instance.GetJobCapacity( job );
-			string strCapacity = capacity >= 0 ? capacity.ToString() : "Infinity";
-			Log.Info( $"{jobId,-16}:{workerCount,2}/{strCapacity,2}" );
-		}
-	}
-
-	/// <summary>
 	/// Returns current maximum worker capacity of a given <c>Job</c>.
 	/// </summary>
 	/// <param name="job"></param>
@@ -97,76 +79,15 @@ public partial class JobManager
 		{
 			var oldJob = player.CurrentJob;
 			_workers[oldJob].Remove( player );
+			player.ShowToastMessage( "You have left your previous job." );
+			oldJob.OffboardPlayer( player );
 		}
 		_workers[job].Add( player );
 		player.CurrentJob = job;
+		player.ShowModalMessage( $"Your new job title is: {job.Title}" );
+		player.CurrentJob.OnboardPlayer( player );
 	}
 	private void SetJob( string jobId, Idahoid player ) => SetJob( _jobs[jobId], player );
 
 	public int GetWorkerCount( Job job ) => _workers[job].Count;
-
-	[ConCmd.Admin("setjobcapacity")]
-	public static void SetJobCapacity(string jobIdentifier, int jobCapacity )
-	{
-		if ( !IdExists( jobIdentifier ) ) return;
-		var job = _instance._jobs[jobIdentifier];
-		_instance._jobCapacityOverrides[jobIdentifier] = jobCapacity;
-		Log.Info( $"{ConsoleSystem.Caller} - Maximum worker capacity for job {job.InternalName} set to {jobCapacity}" );
-	}
-
-	[ConCmd.Server("setjob")]
-	public static void TrySetJob(string jobId )
-	{
-		// Is the job ID invalid?
-		if ( !IdExists( jobId ) ) return;
-	    var player = ConsoleSystem.Caller.Pawn as Idahoid;
-		// Is there no player pawn for this caller?
-		if ( player == null )
-			return;
-		var job = _instance._jobs[jobId];
-		// Is the player already working this job?
-		if ( player.CurrentJob == job )
-		{
-			player.ShowToastMessage( $"You are already working the job \"{job.Title}\"!" );
-			return;
-		}
-		// Is this job full?
-		if ( _instance.IsMaxCapacity(jobId) )
-		{
-			player.ShowToastMessage( $"Job \"{job.Title}\" is already at its max capacity." );
-			return;
-		}
-		// Is the player otherwise ineligible to hold this job in particular?
-		if ( !job.CheckRequirements( player, out string rejectionReason ) )
-		{
-			player.ShowToastMessage( $"You are not qualified for the position of \"{job.Title}\".\nReason: {rejectionReason}" );
-			return;
-		}
-		_instance.SetJob(job, player);
-	}
-
-	[ConCmd.Admin("getworkers")]
-	public static void GetWorkers(string jobIdentifier )
-	{
-		if ( !IdExists( jobIdentifier ) ) return;
-		var job = _instance._jobs[jobIdentifier];
-		var workers = _instance._workers[job];
-		Log.Info( $"{jobIdentifier} worker count: {workers.Count}" );
-		Log.Info( $"---Enumerating {jobIdentifier} workers---" );
-		foreach(var worker in workers )
-		{
-			Log.Info( worker.Name );
-		}
-		Log.Info( $"---End of list---" );
-	}
-
-	private static bool IdExists(string jobIdentifier)
-	{
-		if ( !_instance._jobs.Keys.Contains( jobIdentifier ) )
-		{
-			Log.Error( $"The specified job identifier {jobIdentifier} was not found." );
-			return false;
-		}
-		return true;
-	}
 }

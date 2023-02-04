@@ -55,6 +55,8 @@ public abstract partial class Job : BaseNetworkable
 	/// Returns true if the specified player is eligible to work this job, and false if not.
 	/// </summary>
 	/// <param name="player">The player whose eligibility for this job shall be assessed.</param>
+	/// <param name="reason">If the specified player does not meet the requirements for this
+	/// job, <c>reason</c> shall contain a player-facing message explaining why.</param>
 	public abstract bool CheckRequirements( Idahoid player, out string reason );
 
 	/// <summary>

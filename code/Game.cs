@@ -17,14 +17,11 @@ public partial class IdahoRP : BaseGameManager
 
 	public IdahoRP()
 	{
-		if ( Game.IsClient )
+		if (Game.IsClient)
 		{
 			_ = new Hud();
 		}
-		else
-		{
-			_jobs = new JobManager();
-		}
+		_jobs = new JobManager();
 	}
 
 	public override void ClientJoined( IClient cl )

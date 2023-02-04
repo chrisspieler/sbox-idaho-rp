@@ -1,10 +1,49 @@
-﻿@inherits Sandbox.UI.RootPanel
+﻿@using System
+@using Sandbox;
+
+@inherits Sandbox.UI.RootPanel
 
 @namespace IdahoRP.UI
-<root>
 
+<style>
+    .status-bar-list{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 500px;
+        width: 60%;
+    }
+</style>
+<root>
+    <div class="status-bar-list">
+        <StatusBar GetCurrentValue=@GetHealth
+            GetMaxValue=@GetMaxHealth
+            FillColor=@HealthColor/>
+        <StatusBar GetCurrentValue=@GetMagic
+            GetMaxValue=@GetMaxMagic
+            FillColor=@MagicColor/>
+        <StatusBar GetCurrentValue=@GetStamina
+            GetMaxValue=@GetMaxStamina
+            FillColor=@StaminaColor/>
+    </div>
 </root>
 
 @code {
-    
+    public override void Tick()
+    {
+        Player = Game.LocalPawn as Idahoid;
+    }
+    public Idahoid Player {get; private set;}
+
+    public float GetHealth() => Player?.GetStat(PlayerStat.Health) ?? 0.0f;
+    public float GetMaxHealth() => Player?.GetStat(PlayerStat.MaxHealth) ?? 100.0f;
+    public Color HealthColor = new Color(0.69f, 0.10f, 0.22f, 1.00f);
+
+    public float GetMagic() => Player?.GetStat(PlayerStat.Magic) ?? 0.0f;
+    public float GetMaxMagic() => Player?.GetStat(PlayerStat.MaxMagic) ?? 100.0f;
+    public Color MagicColor = new Color(0.22f, 0.17f, 0.57f, 1.00f);
+
+    public float GetStamina() => Player?.GetStat(PlayerStat.Stamina) ?? 0.0f;
+    public float GetMaxStamina() => Player?.GetStat(PlayerStat.MaxStamina) ?? 100.0f;
+    public Color StaminaColor = new Color(0.37f, 0.51f, 0.24f, 1.00f);
 }

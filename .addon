@@ -16,7 +16,7 @@
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
     "MapList": [
-      "duccsoft.rp_idaho_test"
+      "duccsoft.northbridge_10"
     ],
     "RankType": "None",
     "PerMapRanking": false,
@@ -24,7 +24,13 @@
     "ProjectTemplate": null,
     "Summary": "",
     "Description": "",
-    "Public": false,
-    "ParentPackage": ""
+    "Public": true,
+    "ParentPackage": "",
+    "CsProjName": "",
+    "Compiler": {
+      "RootNamespace": "Sandbox",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;"
+    }
   }
 }
