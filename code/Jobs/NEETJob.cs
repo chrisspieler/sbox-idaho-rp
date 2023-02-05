@@ -1,4 +1,5 @@
 ﻿using IdahoRP.Api;
+using IdahoRP;
 using Sandbox;
 
 namespace IdahoRP.Jobs;
@@ -25,6 +26,9 @@ public partial class NEETJob : Job
 
 	public override void OnboardPlayer( Idahoid player )
 	{
-
+		Log.Info( $"{player.Client} - Player {player.Name} avatar data: {player.ClientAvatarData}" );
+		player.Clothing.Deserialize( player.ClientAvatarData );
+		Log.Info( $"{player.Client} - Dressing player {player.Name} in {player.Clothing.Clothing.Count} clothing pieces." );
+		player.Clothing.DressEntity( player );
 	}
 }

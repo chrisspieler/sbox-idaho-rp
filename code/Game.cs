@@ -13,15 +13,16 @@ public partial class IdahoRP : BaseGameManager
 {
 	[ClientInput] public Vector3 InputDirection { get; protected set; }
 
-	private JobManager _jobs;
-
 	public IdahoRP()
 	{
 		if (Game.IsClient)
 		{
 			_ = new Hud();
 		}
-		_jobs = new JobManager();
+		else
+		{
+			JobManager.Initialize();
+		}
 	}
 
 	public override void ClientJoined( IClient cl )
@@ -30,7 +31,7 @@ public partial class IdahoRP : BaseGameManager
 
 		Log.Info( $"Player joined: {cl.SteamId}\\{cl.Name}");
 
-		var pawn = new Idahoid();
+		var pawn = new Idahoid(cl);
 		cl.Pawn = pawn;
 
 		var allSpawnPoints = Entity.All.OfType<SpawnPoint>();

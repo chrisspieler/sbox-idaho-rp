@@ -1,4 +1,5 @@
-﻿using IdahoRP.Mechanics;
+﻿using IdahoRP.Api;
+using IdahoRP.Mechanics;
 using IdahoRP.UI;
 using Sandbox;
 using System;
@@ -14,9 +15,21 @@ public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
 
+	[Net] public string ClientAvatarData { get; private set; }
+
 	public Idahoid()
 	{
 		InitializeStats();
+	}
+
+	public Idahoid(IClient cl) : this()
+	{
+		ClientAvatarData = cl.GetClientData( "avatar" );
+		Log.Info( $"{cl} - Loaded avatar data: {ClientAvatarData}" );
+		if ( !Game.IsClient )
+		{
+			JobManager.SetJob( "job_neet", this );
+		}
 	}
 
 	public override void Spawn()
@@ -34,7 +47,6 @@ public partial class Idahoid : AnimatedEntity
 		Tags.Add( "player" );
 
 		CreateComponents();
-		Log.Info( "Hello, from Spawn!");
 	}
 
 	public void Respawn()
@@ -50,6 +62,8 @@ public partial class Idahoid : AnimatedEntity
 			.ForEach( x => x.EnableDrawing = true );
 
 		ResetInterpolation();
+
+		Clothing.DressEntity( this );
 	}
 
 	private void CreateComponents()

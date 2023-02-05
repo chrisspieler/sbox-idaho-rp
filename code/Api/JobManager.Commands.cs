@@ -16,12 +16,12 @@ public partial class JobManager
 	public static void GetJobList()
 	{
 		Log.Info( $"Caller: {ConsoleSystem.Caller}" );
-		foreach ( var kvp in _instance._jobs )
+		foreach ( var kvp in _jobs )
 		{
 			var job = kvp.Value;
 			var jobId = job.InternalName;
-			var workerCount = _instance.GetWorkerCount( job );
-			var capacity = _instance.GetJobCapacity( job );
+			var workerCount = GetWorkerCount( job );
+			var capacity = GetJobCapacity( job );
 			string strCapacity = capacity >= 0 ? capacity.ToString() : "Infinity";
 			Log.Info( $"{jobId,-16}:{workerCount,2}/{strCapacity,2}" );
 		}
@@ -36,7 +36,7 @@ public partial class JobManager
 		// Is there no player pawn for this caller?
 		if ( player == null )
 			return;
-		var job = _instance._jobs[jobId];
+		var job = _jobs[jobId];
 		// Is the player already working this job?
 		if ( player.CurrentJob == job )
 		{
@@ -47,7 +47,7 @@ public partial class JobManager
 			return;
 		}
 		// Is this job full?
-		if ( _instance.IsMaxCapacity( jobId ) )
+		if ( IsMaxCapacity( jobId ) )
 		{
 			player.ShowToastMessage(
 				message: $"Job \"{job.Title}\" is already at its max capacity.",
@@ -64,15 +64,15 @@ public partial class JobManager
 				);
 			return;
 		}
-		_instance.SetJob( job, player );
+		SetJob( job, player );
 	}
 
 	[ConCmd.Admin( "setjobcapacity" )]
 	public static void SetJobCapacity( string jobIdentifier, int jobCapacity )
 	{
 		if ( !IdExists( jobIdentifier ) ) return;
-		var job = _instance._jobs[jobIdentifier];
-		_instance._jobCapacityOverrides[jobIdentifier] = jobCapacity;
+		var job = _jobs[jobIdentifier];
+		_jobCapacityOverrides[jobIdentifier] = jobCapacity;
 		Log.Info( $"{ConsoleSystem.Caller} - Maximum worker capacity for job {job.InternalName} set to {jobCapacity}" );
 	}
 
@@ -80,8 +80,8 @@ public partial class JobManager
 	public static void GetWorkers( string jobIdentifier )
 	{
 		if ( !IdExists( jobIdentifier ) ) return;
-		var job = _instance._jobs[jobIdentifier];
-		var workers = _instance._workers[job];
+		var job = _jobs[jobIdentifier];
+		var workers = _workers[job];
 		Log.Info( $"{jobIdentifier} worker count: {workers.Count}" );
 		Log.Info( $"---Enumerating {jobIdentifier} workers---" );
 		foreach ( var worker in workers )
@@ -93,7 +93,7 @@ public partial class JobManager
 
 	private static bool IdExists( string jobIdentifier )
 	{
-		if ( !_instance._jobs.Keys.Contains( jobIdentifier ) )
+		if ( !_jobs.Keys.Contains( jobIdentifier ) )
 		{
 			Log.Error( $"The specified job identifier {jobIdentifier} was not found." );
 			return false;

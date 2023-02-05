@@ -15,6 +15,6 @@ public partial class Idahoid
 		Error
 	}
 
-	[ClientRpc] public void ShowModalMessage(string message ) => Log.Error( message );
-	[ClientRpc] public void ShowToastMessage( string message, MessageLevel level = MessageLevel.Info ) => Log.Error( message );
+	[ClientRpc] public void ShowModalMessage(string message ) => Log.Info( $"Modal message: {message}" );
+	[ClientRpc] public void ShowToastMessage( string message, MessageLevel level = MessageLevel.Info ) => Log.Info( $"Toast message: {message}" );
 }

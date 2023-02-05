@@ -203,6 +203,6 @@ public partial class Idahoid : AnimatedEntity
 		return entity == FindUseEntity();
 	}
 
-	[ConVar.Replicated] public static float sv_player_use_distance { get; set; } = 100;
+	[ConVar.Replicated] public static float sv_player_use_distance { get; set; } = 300;
 	[ConVar.Replicated] public static bool sv_debug_player_use2 { get; set; }
 }

@@ -35,7 +35,6 @@ public partial class Idahoid
 
 	private void InitializeStats()
 	{
-		Log.Info( "Initializing stats!" );
 		_baseStats = new()
 		{
 			{ PlayerStat.Health, 100.0f },
