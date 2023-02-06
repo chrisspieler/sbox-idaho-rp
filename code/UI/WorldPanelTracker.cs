@@ -20,7 +20,6 @@ public static class WorldPanelTracker
 	[Event.Client.Frame]
 	public static void Update()
 	{
-		Log.Info( $"WorldPanel tracker is updating {_entityParents.Count} panels." );
 		foreach ( var kvp in _entityParents )
 		{
 			WorldPanel panel = kvp.Key;
