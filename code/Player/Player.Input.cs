@@ -7,6 +7,7 @@ public partial class Idahoid : AnimatedEntity
 {
 	[ClientInput] public Vector3 MoveInput { get; set; }
 	[ClientInput] public Angles LookInput { get; set; }
+
 	/// <summary>
 	/// Position a player should be looking from in world space.
 	/// </summary>
@@ -47,8 +48,13 @@ public partial class Idahoid : AnimatedEntity
 	public override void BuildInput()
 	{
 		MoveInput = Input.AnalogMove;
-		var lookInput = (LookInput + Input.AnalogLook).Normal;
 
-		LookInput = lookInput.WithPitch( lookInput.pitch.Clamp( -90f, 90f ) );
+		LookInput = CalculateLookInput( Input.AnalogLook );
+	}
+
+	internal Angles CalculateLookInput(Angles input )
+	{
+		var lookInput = (LookInput + input).Normal;
+		return lookInput.WithPitch( lookInput.pitch.Clamp( -90f, 90f ) );
 	}
 }

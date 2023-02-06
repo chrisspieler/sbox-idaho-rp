@@ -1,0 +1,36 @@
+﻿@using IdahoRP;
+@using IdahoRP.UI;
+@inherits Sandbox.UI.WorldPanel
+
+<style>
+    .player-info-panel{
+        height: 70px;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: color(0,0,0,0.2);
+        color: white;
+        font-size: 36px;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    StatusBar {
+        width: 200px;
+    }
+</style>
+
+<root>
+    <div class="player-info-panel">
+        <div id="playerName">@Player.Client.Name</div>
+        <StatusBar GetMaxValue=@GetMaxHealth GetCurrentValue=@GetHealth FillColor=@HealthColor/>
+    </div>
+</root>
+
+
+@code {
+    public Idahoid Player { get; set; }
+    public float GetMaxHealth() => Player.GetStat(PlayerStat.MaxHealth);
+    public float GetHealth() => Player.GetStat(PlayerStat.Health);
+    public Color HealthColor = new Color(0.69f, 0.10f, 0.22f, 1.00f);
+}

@@ -13,6 +13,8 @@ public partial class IdahoRP : BaseGameManager
 {
 	[ClientInput] public Vector3 InputDirection { get; protected set; }
 
+	private bool _botsInitialized = false;
+
 	public IdahoRP()
 	{
 		if (Game.IsClient)
@@ -23,6 +25,12 @@ public partial class IdahoRP : BaseGameManager
 		{
 			JobManager.Initialize();
 		}
+	}
+
+	[ConCmd.Server("add_citizen_bot")]
+	public static void AddCitizenBot()
+	{
+		var bot = new CitizenBot( "Timmy Shitspittle" );
 	}
 
 	public override void ClientJoined( IClient cl )
@@ -39,6 +47,12 @@ public partial class IdahoRP : BaseGameManager
 
 		pawn.Position = randomSpawnPoint.Position.WithZ(randomSpawnPoint.Position.z + 32f);
 		pawn.Respawn();
+
+		if ( !_botsInitialized )
+		{
+			_botsInitialized = true;
+			AddCitizenBot();
+		}
 	}
 
 	public override void Shutdown()

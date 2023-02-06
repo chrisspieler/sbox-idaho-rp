@@ -2,6 +2,7 @@
 using IdahoRP.Mechanics;
 using IdahoRP.UI;
 using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Linq;
 
@@ -46,7 +47,17 @@ public partial class Idahoid : AnimatedEntity
 
 		Tags.Add( "player" );
 
-		CreateComponents();
+		CreateComponents();	
+	}
+
+	public override void ClientSpawn()
+	{
+		var worldInfoPanel = new WorldPlayerInfo()
+		{
+			Player = this
+		};
+		float panelZOffset = Controller.CurrentEyeHeight;
+		WorldPanelTracker.AddWorldPanel( worldInfoPanel, this, Vector3.Up * panelZOffset );
 	}
 
 	public void Respawn()
@@ -114,6 +125,7 @@ public partial class Idahoid : AnimatedEntity
 		TickRegen();
 		TickStatChanges();
 		ExecuteMagicTest();
+		SimulateAnimation();
 	}
 
 	private TimeUntil _canLeftClick;
@@ -166,5 +178,35 @@ public partial class Idahoid : AnimatedEntity
 		Camera.Position = EyePosition;
 		Camera.FirstPersonViewer = this;
 		Camera.FieldOfView = Screen.CreateVerticalFieldOfView(Game.Preferences.FieldOfView);
+	}
+
+	void SimulateAnimation()
+	{
+
+		// where should we be rotated to
+		var turnSpeed = 0.02f;
+
+		Rotation rotation;
+
+		rotation = LookInput.ToRotation();
+
+		var idealRotation = Rotation.LookAt( rotation.Forward.WithZ( 0 ), Vector3.Up );
+		Rotation = Rotation.Slerp( Rotation, idealRotation, Controller.GetWishVelocity().Length * Time.Delta * turnSpeed );
+		Rotation = Rotation.Clamp( idealRotation, 45.0f, out var shuffle ); // lock facing to within 45 degrees of look direction
+
+		CitizenAnimationHelper animHelper = new CitizenAnimationHelper( this );
+
+		animHelper.WithWishVelocity( Controller.GetWishVelocity() );
+		animHelper.WithVelocity( Controller.GetWishVelocity() );
+		animHelper.WithLookAt( EyePosition + EyeRotation.Forward * 100.0f, 1.0f, 1.0f, 0.5f );
+		animHelper.AimAngle = rotation;
+		animHelper.FootShuffle = shuffle;
+		animHelper.DuckLevel = MathX.Lerp( animHelper.DuckLevel, Controller.IsMechanicActive<CrouchMechanic>() ? 1 : 0, Time.Delta * 10.0f );
+		animHelper.VoiceLevel = (Game.IsClient && Client.IsValid()) ? Client.Voice.LastHeard < 0.5f ? Client.Voice.CurrentLevel : 0.0f : 0.0f;
+		animHelper.IsGrounded = Controller.GroundEntity != null;
+		animHelper.IsSwimming = this.GetWaterLevel() >= 0.5f;
+		animHelper.IsWeaponLowered = false;
+
+		if ( Controller.IsMechanicActive<JumpMechanic>() ) animHelper.TriggerJump();
 	}
 }
