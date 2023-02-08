@@ -47,7 +47,11 @@ public partial class Idahoid : AnimatedEntity
 
 		Tags.Add( "player" );
 
-		CreateComponents();	
+		CreateComponents();
+
+		Log.Info($"NavMesh.IsLoaded: {NavMesh.IsLoaded}");
+		if (NavMesh.IsLoaded)
+			Log.Info($"Loaded {NavMesh.GetNavAreas().Count()} NavAreas.");
 	}
 
 	public override void ClientSpawn()
@@ -60,8 +64,10 @@ public partial class Idahoid : AnimatedEntity
 		WorldPanelTracker.AddWorldPanel( worldInfoPanel, this, Vector3.Up * panelZOffset );
 	}
 
-	public void Respawn()
+	public void Respawn(Vector3? position = null)
 	{
+		Position = position == null ? GetRandomSpawnPoint() : position.Value;
+
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( -16, 16, 0 ), new Vector3( 16, 16, 72 ) );
 
 		Health = 100;
@@ -75,6 +81,13 @@ public partial class Idahoid : AnimatedEntity
 		ResetInterpolation();
 
 		Clothing.DressEntity( this );
+
+		Vector3 GetRandomSpawnPoint()
+		{
+			var allSpawnPoints = Entity.All.OfType<SpawnPoint>();
+			var randomSpawnPoint = allSpawnPoints.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
+			return randomSpawnPoint.Position.WithZ( randomSpawnPoint.Position.z + 32f );
+		}
 	}
 
 	private void CreateComponents()
@@ -130,6 +143,10 @@ public partial class Idahoid : AnimatedEntity
 
 	private TimeUntil _canLeftClick;
 	private TimeUntil _canRightClick;
+	private CitizenBot _lastSpawnedBot;
+
+	const string MODEL_WATERMELON = "models/sbox_props/watermelon/watermelon.vmdl_c";
+	const string MODEL_CITIZEN = "models/citizen/citizen.vmdl";
 
 	private void ExecuteMagicTest()
 	{
@@ -137,13 +154,13 @@ public partial class Idahoid : AnimatedEntity
 		{
 			if ( Input.Pressed( InputButton.PrimaryAttack ) && _canLeftClick && TrySpendMagic(5.0f) )
 			{
-				LaunchModel( "models/sbox_props/watermelon/watermelon.vmdl_c" );
+				LaunchModel( MODEL_WATERMELON );
 				_canLeftClick = 1.0f;
 			}
 			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(20.0f) )
 			{
-				LaunchModel( "models/citizen/citizen.vmdl" );
-				_canRightClick = 3.0f;
+				Reproduce();
+				_canRightClick = 1.0f;
 			}
 			
 		}
@@ -165,6 +182,36 @@ public partial class Idahoid : AnimatedEntity
 			model.Rotation = Rotation.LookAt( Vector3.Random.Normal );
 			model.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 			model.PhysicsGroup.Velocity = EyeRotation.Forward * 1000;
+		}
+
+		void Reproduce()
+		{
+			var newBot = new CitizenBot( $"Son of {Client.Name}" );
+			if (_lastSpawnedBot == null )
+			{
+				newBot.FollowTarget = Client.Pawn;
+				newBot.LookTarget = Client.Pawn;
+			}
+			else
+			{
+				newBot.FollowTarget = _lastSpawnedBot.Client.Pawn;
+				newBot.LookTarget = _lastSpawnedBot.Client.Pawn;
+			}
+			_lastSpawnedBot = newBot;
+			var pawn = newBot.Client.Pawn;
+			var tryDistance = 200.0f;
+			var tryPosition = EyePosition + EyeRotation.Forward * tryDistance;
+			TraceResult tr = Trace.Ray( EyePosition, tryPosition )
+				.Ignore(this)
+				.Run();
+			var finalDistance = tryDistance;
+			if ( tr.Hit )
+			{
+				finalDistance -= tr.Distance - Controller.BodyGirth;
+			}
+
+			pawn.Position = EyePosition + EyeRotation.Forward * finalDistance;
+			pawn.Rotation = Rotation.FromYaw( Rotation.Yaw() + 90.0f );
 		}
 	}
 

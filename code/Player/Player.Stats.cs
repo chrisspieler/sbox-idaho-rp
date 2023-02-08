@@ -14,6 +14,7 @@ public enum PlayerStat
 	Health,
 	MaxHealth,
 	Magic,
+	MagicRegen,
 	MaxMagic,
 	Stamina,
 	StaminaRegen,
@@ -41,6 +42,7 @@ public partial class Idahoid
 			{ PlayerStat.MaxHealth, 100.0f },
 			{ PlayerStat.Magic, 60.0f },
 			{ PlayerStat.MaxMagic, 60.0f },
+			{ PlayerStat.MagicRegen, 2.0f },
 			{ PlayerStat.Stamina, 75.0f },
 			{ PlayerStat.StaminaRegen, 10.0f },
 			{ PlayerStat.MaxStamina, 75.0f },
@@ -51,6 +53,7 @@ public partial class Idahoid
 			{ PlayerStat.Health, p => Health = p },
 			{ PlayerStat.MaxHealth, p => _maxHealth = p },
 			{ PlayerStat.Magic, p => _magic = p },
+			{ PlayerStat.MagicRegen, p => _magicRegen = p },
 			{ PlayerStat.MaxMagic, p => _maxMagic = p },
 			{ PlayerStat.Stamina, p => _stamina = p },
 			{ PlayerStat.StaminaRegen, p => _staminaRegenRate = p },
@@ -62,6 +65,7 @@ public partial class Idahoid
 			{ PlayerStat.Health, () => Health },
 			{ PlayerStat.MaxHealth, () => _maxHealth },
 			{ PlayerStat.Magic, () => _magic },
+			{ PlayerStat.MagicRegen, () => _magicRegen },
 			{ PlayerStat.MaxMagic, () => _maxMagic },
 			{ PlayerStat.Stamina, () => _stamina },
 			{ PlayerStat.StaminaRegen, () => _staminaRegenRate },
@@ -87,7 +91,8 @@ public partial class Idahoid
 		};
 		_regenMappings = new()
 		{
-			{PlayerStat.Stamina, PlayerStat.StaminaRegen }
+			{PlayerStat.Stamina, PlayerStat.StaminaRegen },
+			{PlayerStat.Magic, PlayerStat.MagicRegen }
 		};
 	}
 

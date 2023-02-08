@@ -42,10 +42,6 @@ public partial class IdahoRP : BaseGameManager
 		var pawn = new Idahoid(cl);
 		cl.Pawn = pawn;
 
-		var allSpawnPoints = Entity.All.OfType<SpawnPoint>();
-		var randomSpawnPoint = allSpawnPoints.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
-
-		pawn.Position = randomSpawnPoint.Position.WithZ(randomSpawnPoint.Position.z + 32f);
 		pawn.Respawn();
 
 		if ( !_botsInitialized )
