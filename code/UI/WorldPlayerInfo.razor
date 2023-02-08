@@ -4,15 +4,23 @@
 
 <style>
     .player-info-panel{
-        height: 70px;
+        height: 100px;
         padding: 5px;
         border-radius: 10px;
         background-color: color(0,0,0,0.2);
         color: white;
-        font-size: 36px;
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
+    }
+
+    #playerName {
+        font-size: 36px;
+    }
+
+    #jobTitle {
+        font-size: 28px;
+        font-weight: light;
     }
 
     StatusBar {
@@ -22,7 +30,8 @@
 
 <root>
     <div class="player-info-panel">
-        <div id="playerName">@Player.Client.Name</div>
+        <div id="playerName">@(Player?.CitizenData?.Name ?? "")</div>
+        <div id="jobTitle">@(Player?.CurrentJob?.Title ?? "")</div>
         <StatusBar GetMaxValue=@GetMaxHealth GetCurrentValue=@GetHealth FillColor=@HealthColor/>
     </div>
 </root>

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdahoRP;
+namespace IdahoRP.Api;
 
 public partial class CitizenBot : Bot
 {
-	public Vector3 TargetMoveDir { get; set; } 
+	public Vector3 TargetMoveDir { get; set; }
 	public IEntity FollowTarget { get; set; }
 	public float FollowDistance { get; set; } = 80f;
 	public IEntity LookTarget { get; set; }
@@ -18,7 +18,7 @@ public partial class CitizenBot : Bot
 	[ConVar.Server( "debug_bot_input" )]
 	private static bool _debugBotInput { get; set; } = true;
 
-	public CitizenBot(string name) : base(name)
+	public CitizenBot( string name ) : base( name )
 	{
 
 	}
@@ -26,7 +26,7 @@ public partial class CitizenBot : Bot
 	public override void Tick()
 	{
 		var pawn = Client.Pawn as Idahoid;
-		if (FollowTarget != null )
+		if ( FollowTarget != null )
 		{
 			DoFollow( pawn );
 		}
@@ -35,7 +35,7 @@ public partial class CitizenBot : Bot
 			TargetMoveDir = Vector3.Zero;
 		}
 
-		if (LookTarget != null )
+		if ( LookTarget != null )
 		{
 			pawn.LookInput = GetLookDir( pawn, LookTarget.Position );
 		}
@@ -45,7 +45,7 @@ public partial class CitizenBot : Bot
 		}
 	}
 
-	private void DoFollow(Idahoid pawn )
+	private void DoFollow( Idahoid pawn )
 	{
 		var dstTarget = Client.Position.Distance( FollowTarget.Position );
 		// Try not to overlap the follow target.
@@ -57,28 +57,28 @@ public partial class CitizenBot : Bot
 		TargetMoveDir = GetMoveDir( pawn, FollowTarget.Position );
 	}
 
-	private Vector3 GetMoveDir(Idahoid pawn, Vector3 moveToPos)
+	private Vector3 GetMoveDir( Idahoid pawn, Vector3 moveToPos )
 	{
 		var localMoveToPos = pawn.Transform.PointToLocal( moveToPos );
 		Vector3 dirToTarget = localMoveToPos;
 		dirToTarget = dirToTarget.Normal.WithZ( 0 );
 		if ( _debugBotInput )
-			DebugOverlay.DrawVector( Client.Position, Client.Position + pawn.Transform.NormalToWorld(dirToTarget) * 20f, Color.Green );
+			DebugOverlay.DrawVector( Client.Position, Client.Position + pawn.Transform.NormalToWorld( dirToTarget ) * 20f, Color.Green );
 		return dirToTarget;
 	}
 
-	private Angles GetLookDir(Idahoid pawn, Vector3 lookAtPos)
+	private Angles GetLookDir( Idahoid pawn, Vector3 lookAtPos )
 	{
 		Vector3 dirToTarget = lookAtPos - Client.Position;
 		dirToTarget = dirToTarget.Normal;
 		var rot = Rotation.LookAt( dirToTarget ).Angles();
 		if ( _debugBotInput )
 		{
-			Vector3 eyePosition = Client.Position + Vector3.Zero.WithZ(pawn.Controller.CurrentEyeHeight);
+			Vector3 eyePosition = Client.Position + Vector3.Zero.WithZ( pawn.Controller.CurrentEyeHeight );
 			DebugOverlay.Line(
 				start: eyePosition,
 				end: eyePosition + dirToTarget * FollowDistance,
-				color: Color.Blue);
+				color: Color.Blue );
 		}
 		return rot;
 	}

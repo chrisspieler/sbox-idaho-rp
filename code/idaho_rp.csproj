@@ -30,7 +30,7 @@
   <PropertyGroup>
 	<OutputPath>C:\Program Files (x86)\Steam\steamapps\common\sbox/.vs/output/</OutputPath>
 	<DocumentationFile>C:\Program Files (x86)\Steam\steamapps\common\sbox/.vs/output/idaho_rp.xml</DocumentationFile>
-	<RootNamespace>Sandbox</RootNamespace>
+	<RootNamespace>IdahoRP</RootNamespace>
 	<Nullable>disable</Nullable>
   </PropertyGroup>
 

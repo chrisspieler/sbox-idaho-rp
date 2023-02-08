@@ -25,7 +25,7 @@ public class ClothingContainer
 	/// <summary>
 	/// Add clothing item
 	/// </summary>
-	private void Add( Clothing clothing )
+	public void Add( Clothing clothing )
 	{
 		Clothing.RemoveAll( x => !x.CanBeWornWith( clothing ) );
 		Clothing.Add( clothing );
@@ -34,7 +34,7 @@ public class ClothingContainer
 	/// <summary>
 	/// Remove clothing item
 	/// </summary>
-	private void Remove( Clothing clothing )
+	public void Remove( Clothing clothing )
 	{
 		Clothing.Remove( clothing );
 	}

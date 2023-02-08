@@ -1,0 +1,8 @@
+{
+  "Name": "Nonbinary",
+  "SubjectPronoun": "they",
+  "ObjectPronoun": "them",
+  "PosessiveAdjective": "their",
+  "PosessivePronoun": "theirs",
+  "ReflexivePronoun": "themselves"
+}

@@ -7,5 +7,5 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
-build_property.RootNamespace = Sandbox
+build_property.RootNamespace = IdahoRP
 build_property.ProjectDir = c:\users\chris\documents\s&box projects\idaho_rp\code\

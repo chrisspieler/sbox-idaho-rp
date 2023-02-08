@@ -1,0 +1,8 @@
+{
+  "Name": "Female",
+  "SubjectPronoun": "she",
+  "ObjectPronoun": "her",
+  "PosessiveAdjective": "her",
+  "PosessivePronoun": "hers",
+  "ReflexivePronoun": "herself"
+}

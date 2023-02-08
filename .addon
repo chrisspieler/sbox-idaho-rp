@@ -26,9 +26,9 @@
     "Description": "",
     "Public": true,
     "ParentPackage": "",
-    "CsProjName": "",
+    "CsProjName": "idaho_rp",
     "Compiler": {
-      "RootNamespace": "Sandbox",
+      "RootNamespace": "IdahoRP",
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;"
     }

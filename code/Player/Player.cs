@@ -5,6 +5,7 @@ using Sandbox;
 using Sandbox.UI;
 using System;
 using System.Linq;
+using System.Numerics;
 
 namespace IdahoRP;
 
@@ -16,8 +17,6 @@ public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
 
-	[Net] public string ClientAvatarData { get; private set; }
-
 	public Idahoid()
 	{
 		InitializeStats();
@@ -25,14 +24,30 @@ public partial class Idahoid : AnimatedEntity
 
 	public Idahoid(IClient cl) : this()
 	{
-		ClientAvatarData = cl.GetClientData( "avatar" );
-		Log.Info( $"{cl} - Loaded avatar data: {ClientAvatarData}" );
+		if ( cl.IsBot )
+		{
+			CitizenData = CitizenData.GenerateRandom();
+		}
+		else
+		{
+			string avatarData = cl.GetClientData( "avatar" );
+			Log.Info( $"{cl} - Loaded avatar data: {avatarData}" );
+			CitizenData = new CitizenData()
+			{
+				Name = cl.Name,
+				DefaultOutfit = new ClothingContainer(),
+				CurrentJob = null
+			};
+			CitizenData.DefaultOutfit.Deserialize( avatarData );
+		}
+		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
+		ClientOutfit = CitizenData.DefaultOutfit;
+		CitizenData.DefaultOutfit.DressEntity( this );
 		if ( !Game.IsClient )
 		{
 			JobManager.SetJob( "job_neet", this );
 		}
 	}
-
 	public override void Spawn()
 	{
 		Predictable = true;
@@ -80,12 +95,12 @@ public partial class Idahoid : AnimatedEntity
 
 		ResetInterpolation();
 
-		Clothing.DressEntity( this );
+		ClientOutfit.DressEntity( this );
 
 		Vector3 GetRandomSpawnPoint()
 		{
 			var allSpawnPoints = Entity.All.OfType<SpawnPoint>();
-			var randomSpawnPoint = allSpawnPoints.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
+			var randomSpawnPoint = allSpawnPoints.Random();
 			return randomSpawnPoint.Position.WithZ( randomSpawnPoint.Position.z + 32f );
 		}
 	}
