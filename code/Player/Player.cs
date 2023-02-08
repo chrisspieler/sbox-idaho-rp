@@ -63,10 +63,6 @@ public partial class Idahoid : AnimatedEntity
 		Tags.Add( "player" );
 
 		CreateComponents();
-
-		Log.Info($"NavMesh.IsLoaded: {NavMesh.IsLoaded}");
-		if (NavMesh.IsLoaded)
-			Log.Info($"Loaded {NavMesh.GetNavAreas().Count()} NavAreas.");
 	}
 
 	public override void ClientSpawn()
@@ -172,7 +168,7 @@ public partial class Idahoid : AnimatedEntity
 				LaunchModel( MODEL_WATERMELON );
 				_canLeftClick = 1.0f;
 			}
-			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(20.0f) )
+			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(5.0f) )
 			{
 				Reproduce();
 				_canRightClick = 1.0f;

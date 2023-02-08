@@ -37,8 +37,6 @@ public partial class IdahoRP : BaseGameManager
 	{
 		base.ClientJoined( cl );
 
-		Log.Info( $"Player joined: {cl.SteamId}\\{cl.Name}");
-
 		var pawn = new Idahoid(cl);
 		cl.Pawn = pawn;
 
