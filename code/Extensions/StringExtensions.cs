@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IdahoRP.Utilities;
+namespace IdahoRP;
 
-internal static class StringUtilities
+internal static class StringExtensions
 {
 	/// <summary>
 	/// Returns true if all of the characters in the provided string <c>str</c> are

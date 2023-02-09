@@ -1,14 +1,7 @@
-﻿using IdahoRP.Utilities;
-using Sandbox;
+﻿using Sandbox;
 using Sandbox.Diagnostics;
-using Sandbox.UI.Tests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IdahoRP.Api;
+namespace IdahoRP;
 
 /// <summary>
 /// The base class for all jobs in Idaho RP.

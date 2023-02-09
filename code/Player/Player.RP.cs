@@ -1,16 +1,11 @@
-﻿using IdahoRP.Api;
-using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Sandbox;
 
 namespace IdahoRP;
 
 public partial class Idahoid
 {
-	[Net] public CitizenData CitizenData { get; set; }
+	[Net] public string RpName { get; set; }
+	public ClothingContainer DefaultOutfit { get; set; }
 	[Net] public Job CurrentJob { get; set; }
 	public ClothingContainer ClientOutfit { get; set; } = new ClothingContainer();
 	[Net] private float _maxHealth { get; set; } = 100f;

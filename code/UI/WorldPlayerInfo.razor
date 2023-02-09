@@ -30,8 +30,8 @@
 
 <root>
     <div class="player-info-panel">
-        <div id="playerName">@(Player?.CitizenData?.Name ?? "")</div>
-        <div id="jobTitle">@(Player?.CurrentJob?.Title ?? "")</div>
+        <div id="playerName">@(Player?.RpName ?? "null")</div>
+        <div id="jobTitle">@(Player?.CurrentJob?.Title ?? "null")</div>
         <StatusBar GetMaxValue=@GetMaxHealth GetCurrentValue=@GetHealth FillColor=@HealthColor/>
     </div>
 </root>

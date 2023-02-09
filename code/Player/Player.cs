@@ -2,10 +2,8 @@
 using IdahoRP.Mechanics;
 using IdahoRP.UI;
 using Sandbox;
-using Sandbox.UI;
 using System;
 using System.Linq;
-using System.Numerics;
 
 namespace IdahoRP;
 
@@ -24,25 +22,31 @@ public partial class Idahoid : AnimatedEntity
 
 	public Idahoid(IClient cl) : this()
 	{
+		CitizenData citizenData;
 		if ( cl.IsBot )
 		{
-			CitizenData = CitizenData.GenerateRandom();
+			citizenData = BotManager.GetCitizenData( cl.GetBotId() );
+			Log.Trace( $"Configuring pawn for citizen bot named: {citizenData.Name}" );
 		}
 		else
 		{
 			string avatarData = cl.GetClientData( "avatar" );
-			Log.Info( $"{cl} - Loaded avatar data: {avatarData}" );
-			CitizenData = new CitizenData()
+			Log.Trace( $"{cl} - Loaded avatar data: {avatarData}" );
+			citizenData = new CitizenData()
 			{
 				Name = cl.Name,
 				DefaultOutfit = new ClothingContainer(),
 				CurrentJob = null
 			};
-			CitizenData.DefaultOutfit.Deserialize( avatarData );
+			citizenData.DefaultOutfit.Deserialize( avatarData );
 		}
+		RpName = citizenData.Name;
+		DefaultOutfit = citizenData.DefaultOutfit;
+		CurrentJob = citizenData.CurrentJob;
+		CreateInfoPanel();
 		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
-		ClientOutfit = CitizenData.DefaultOutfit;
-		CitizenData.DefaultOutfit.DressEntity( this );
+		ClientOutfit = citizenData.DefaultOutfit;
+		DefaultOutfit.DressEntity( this );
 		if ( !Game.IsClient )
 		{
 			JobManager.SetJob( "job_neet", this );
@@ -65,8 +69,10 @@ public partial class Idahoid : AnimatedEntity
 		CreateComponents();
 	}
 
-	public override void ClientSpawn()
+	[ClientRpc]
+	public void CreateInfoPanel()
 	{
+		Log.Trace( $"Creating info panel for {RpName}" );
 		var worldInfoPanel = new WorldPlayerInfo()
 		{
 			Player = this
@@ -197,7 +203,7 @@ public partial class Idahoid : AnimatedEntity
 
 		void Reproduce()
 		{
-			var newBot = new CitizenBot( $"Son of {Client.Name}" );
+			var newBot = BotManager.AddCitizenBot();
 			if (_lastSpawnedBot == null )
 			{
 				newBot.FollowTarget = Client.Pawn;

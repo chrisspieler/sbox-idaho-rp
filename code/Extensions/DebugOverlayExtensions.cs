@@ -1,6 +1,6 @@
 ﻿using Sandbox.Internal.Globals;
 
-namespace IdahoRP.Utilities;
+namespace IdahoRP;
 
 internal static class DebugOverlayExtensions
 {

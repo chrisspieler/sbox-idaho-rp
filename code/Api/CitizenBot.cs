@@ -1,10 +1,4 @@
-﻿using IdahoRP.Utilities;
-using Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Sandbox;
 
 namespace IdahoRP.Api;
 
@@ -16,11 +10,11 @@ public partial class CitizenBot : Bot
 	public IEntity LookTarget { get; set; }
 
 	[ConVar.Server( "debug_bot_input" )]
-	private static bool _debugBotInput { get; set; } = true;
+	private static bool _debugBotInput { get; set; } = false;
 
 	public CitizenBot( string name ) : base( name )
 	{
-
+		
 	}
 
 	public override void Tick()

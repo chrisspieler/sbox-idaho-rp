@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System.ComponentModel;
 
 namespace IdahoRP;
 
@@ -11,7 +10,6 @@ public partial class Idahoid : AnimatedEntity
 	/// <summary>
 	/// Position a player should be looking from in world space.
 	/// </summary>
-	[Browsable( false )]
 	public Vector3 EyePosition
 	{
 		get => Transform.PointToWorld( EyeLocalPosition );
@@ -21,13 +19,12 @@ public partial class Idahoid : AnimatedEntity
 	/// <summary>
 	/// Position a player should be looking from in local to the entity coordinates.
 	/// </summary>
-	[Net, Predicted, Browsable( false )]
+	[Net, Predicted]
 	public Vector3 EyeLocalPosition { get; set; }
 
 	/// <summary>
 	/// Rotation of the entity's "eyes", i.e. rotation for the camera when this entity is used as the view entity.
 	/// </summary>
-	[Browsable( false )]
 	public Rotation EyeRotation
 	{
 		get => Transform.RotationToWorld( EyeLocalRotation );
@@ -37,7 +34,7 @@ public partial class Idahoid : AnimatedEntity
 	/// <summary>
 	/// Rotation of the entity's "eyes", i.e. rotation for the camera when this entity is used as the view entity. In local to the entity coordinates.
 	/// </summary>
-	[Net, Predicted, Browsable( false )]
+	[Net, Predicted]
 	public Rotation EyeLocalRotation { get; set; }
 
 	/// <summary>

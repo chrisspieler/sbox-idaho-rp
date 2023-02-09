@@ -1,11 +1,6 @@
 ﻿using IdahoRP.Api;
 using IdahoRP.UI;
 using Sandbox;
-using Sandbox.UI.Construct;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IdahoRP;
 
@@ -27,12 +22,6 @@ public partial class IdahoRP : BaseGameManager
 		}
 	}
 
-	[ConCmd.Server("add_citizen_bot")]
-	public static void AddCitizenBot()
-	{
-		var bot = new CitizenBot( "Timmy Shitspittle" );
-	}
-
 	public override void ClientJoined( IClient cl )
 	{
 		base.ClientJoined( cl );
@@ -45,7 +34,7 @@ public partial class IdahoRP : BaseGameManager
 		if ( !_botsInitialized )
 		{
 			_botsInitialized = true;
-			AddCitizenBot();
+			BotManager.AddCitizenBot();
 		}
 	}
 
