@@ -1,0 +1,45 @@
+﻿WelcomePage {
+    pointer-events: all;
+
+    .panel {
+        width: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0px;
+    }
+
+    button {
+        margin: 10px;
+    }
+}
+
+h1{
+    color: white;
+    font-size: 72px;
+    font-weight: bolder;
+}
+
+.panel {
+    backdrop-filter: blur( 10px );
+    background-color: color(0,0,0,0.6);
+    border-radius: 10px;
+}
+
+.title {
+    margin: 30px;
+}
+
+button {
+    padding: 20px, 30px, 20px, 30px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial;
+    font-size: 28px;
+    background-color: color(0, 0.215686, 0.462745, 1);
+    cursor: pointer;
+
+    &:hover{
+        background-color: color(0, 0.3, 0.55, 1);
+    }
+}

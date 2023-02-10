@@ -1,6 +1,7 @@
 ﻿using IdahoRP.Api;
 using IdahoRP.UI;
 using Sandbox;
+using Sandbox.UI;
 
 namespace IdahoRP;
 
@@ -9,12 +10,16 @@ public partial class IdahoRP : BaseGameManager
 	[ClientInput] public Vector3 InputDirection { get; protected set; }
 
 	private bool _botsInitialized = false;
+	private RootPanel _welcomePage;
+
+	private static IdahoRP _instance;
 
 	public IdahoRP()
 	{
+		_instance = this;
 		if (Game.IsClient)
 		{
-			_ = new Hud();
+			_welcomePage = new WelcomePage();
 		}
 		else
 		{
@@ -26,16 +31,33 @@ public partial class IdahoRP : BaseGameManager
 	{
 		base.ClientJoined( cl );
 
-		var pawn = new Idahoid(cl);
+		if ( cl.IsBot )
+		{
+			JoinGame( cl );
+		}
+	}
+
+	private void JoinGame(IClient cl )
+	{
+		var pawn = new Idahoid( cl );
 		cl.Pawn = pawn;
 
 		pawn.Respawn();
 
-		if ( !_botsInitialized )
-		{
-			_botsInitialized = true;
-			BotManager.AddCitizenBot();
-		}
+		CloseWelcomePage();
+		pawn.ShowHud();
+	}
+
+	[ClientRpc]
+	private void CloseWelcomePage()
+	{
+		_welcomePage.Delete();
+	}
+
+	[ConCmd.Server( "joingame" )]
+	private static void JoinGameCmd()
+	{
+		_instance.JoinGame( ConsoleSystem.Caller );
 	}
 
 	public override void Shutdown()

@@ -1,4 +1,5 @@
-﻿using IdahoRP.Bots;
+﻿using IdahoRP.Api;
+using IdahoRP.Bots;
 using Sandbox;
 
 namespace IdahoRP;
@@ -33,8 +34,8 @@ public partial class CitizenBot : Bot
 		if ( CurrentAction?.IsCompleted == true )
 		{
 			Log.Info( $"Navigation completed. Deleting bot: {Client.Name}" );
-			Client.Pawn.Delete();
-			Client.Delete();
+			BotManager.DeleteBot( Client.GetBotId() );
+			return;
 		}
 
 		CurrentAction?.Tick( this );

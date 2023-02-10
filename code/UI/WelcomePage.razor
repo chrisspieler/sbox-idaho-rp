@@ -1,0 +1,23 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@namespace IdahoRP.UI
+@inherits Sandbox.UI.RootPanel;
+@attribute [StyleSheet("UI/Styles/idaho_rp.scss")]
+
+<root>
+    <div class="panel">
+        <header>
+            <h1 class="title">Welcome to Idaho RP</h1>
+        </header>
+        <div "sub-panel">
+            <button onclick="@(() => JoinGame())">Join Game</button>
+        </div>
+    </div>
+</root>
+
+@code {
+    public void JoinGame()
+    {
+        ConsoleSystem.Run("joingame");
+    }
+}

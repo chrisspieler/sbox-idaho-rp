@@ -50,8 +50,7 @@ public static class WorldPanelTracker
 	private static void UpdatePanel( WorldPanel panel, Entity parent )
 	{
 		var newPosition = parent.Transform.Position + _positionOffsets[panel];
-		var localPawn = Game.LocalPawn as Idahoid;
-		var newRotation = Rotation.LookAt( localPawn.EyeRotation.Backward, Vector3.Up );
+		var newRotation = Rotation.LookAt( Camera.Rotation.Backward, Vector3.Up );
 		panel.Transform = parent.Transform
 			.WithPosition( newPosition )
 			.WithRotation( newRotation );
