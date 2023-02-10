@@ -1,6 +1,8 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IdahoRP.UI;
 
@@ -15,6 +17,23 @@ public static class WorldPanelTracker
 		_entityParents[panel] = parent;
 		_positionOffsets[panel] = positionOffset;
 		UpdatePanel( panel, parent );
+	}
+	public static void DestroyWorldPanel( WorldPanel panel )
+	{
+		_entityParents.Remove( panel );
+		_positionOffsets.Remove( panel );
+		panel.Delete();
+	}
+
+	public static void DestroyWorldPanels( Entity parent )
+	{
+		IEnumerable<WorldPanel> panels = _entityParents
+			.Where( kvp => kvp.Value == parent )
+			.Select( kvp => kvp.Key);
+		foreach (var panel in panels )
+		{
+			DestroyWorldPanel( panel );
+		}
 	}
 
 	[Event.Client.Frame]

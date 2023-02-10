@@ -1,4 +1,5 @@
 ﻿using IdahoRP.Api;
+using IdahoRP.Bots;
 using IdahoRP.Mechanics;
 using IdahoRP.UI;
 using Sandbox;
@@ -81,6 +82,12 @@ public partial class Idahoid : AnimatedEntity
 		WorldPanelTracker.AddWorldPanel( worldInfoPanel, this, Vector3.Up * panelZOffset );
 	}
 
+	[ClientRpc]
+	public void DestroyInfoPanel()
+	{
+
+	}
+
 	public void Respawn(Vector3? position = null)
 	{
 		Position = position == null ? GetRandomSpawnPoint() : position.Value;
@@ -160,7 +167,6 @@ public partial class Idahoid : AnimatedEntity
 
 	private TimeUntil _canLeftClick;
 	private TimeUntil _canRightClick;
-	private CitizenBot _lastSpawnedBot;
 
 	const string MODEL_WATERMELON = "models/sbox_props/watermelon/watermelon.vmdl_c";
 	const string MODEL_CITIZEN = "models/citizen/citizen.vmdl";
@@ -204,17 +210,6 @@ public partial class Idahoid : AnimatedEntity
 		void Reproduce()
 		{
 			var newBot = BotManager.AddCitizenBot();
-			if (_lastSpawnedBot == null )
-			{
-				newBot.FollowTarget = Client.Pawn;
-				newBot.LookTarget = Client.Pawn;
-			}
-			else
-			{
-				newBot.FollowTarget = _lastSpawnedBot.Client.Pawn;
-				newBot.LookTarget = _lastSpawnedBot.Client.Pawn;
-			}
-			_lastSpawnedBot = newBot;
 			var pawn = newBot.Client.Pawn;
 			var tryDistance = 200.0f;
 			var tryPosition = EyePosition + EyeRotation.Forward * tryDistance;
@@ -229,6 +224,8 @@ public partial class Idahoid : AnimatedEntity
 
 			pawn.Position = EyePosition + EyeRotation.Forward * finalDistance;
 			pawn.Rotation = Rotation.FromYaw( Rotation.Yaw() + 90.0f );
+
+			newBot.CurrentAction = new GoToAction( newBot, Vector3.Zero );
 		}
 	}
 
@@ -272,5 +269,10 @@ public partial class Idahoid : AnimatedEntity
 		animHelper.IsWeaponLowered = false;
 
 		if ( Controller.IsMechanicActive<JumpMechanic>() ) animHelper.TriggerJump();
+	}
+
+	protected override void OnDestroy()
+	{
+		WorldPanelTracker.DestroyWorldPanels( this );
 	}
 }

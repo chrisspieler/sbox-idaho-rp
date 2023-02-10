@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using IdahoRP.Bots;
+using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
