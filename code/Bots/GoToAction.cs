@@ -35,7 +35,7 @@ public class GoToAction : IBotAction
 		}
 		else
 		{
-			Log.Info($"Built nav path with {_path.Count} elements. Start position: {startPos}, End position: {targetPosition}");
+			Log.Trace($"Built nav path with {_path.Count} elements. Start position: {startPos}, End position: {targetPosition}");
 		}
 	}
 

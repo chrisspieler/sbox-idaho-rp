@@ -14,7 +14,7 @@ public class Gender : GameResource
 	/// </summary>
 	public string SubjectPronoun { get; set; }
 	/// <summary>
-	/// Used to achieve achieve proper subject-verb agreement.
+	/// Used by <c>GetSubjectVerb()</c> to achieve achieve proper subject-verb agreement.
 	/// </summary>
 	public bool SubjectIsPlural { get; set; }
 	/// <summary>
@@ -35,6 +35,11 @@ public class Gender : GameResource
 	public string ReflexivePronoun { get; set; }
 	public float RarityFactor { get; set; } = 20f;
 	
+	/// <summary>
+	/// Returns the subject and object pronouns in "pronouns in bio" format.
+	/// For example: "she/her", "they/them", "he/him"
+	/// </summary>
+	/// <returns></returns>
 	public string SimplePronouns()
 	{
 		var sp = SubjectPronoun ?? "null";
@@ -42,10 +47,17 @@ public class Gender : GameResource
 		return $"{sp}/{op}";
 	}
 
+	/// <summary>
+	/// Given the singular and verbal conjugation of a verb, returns a conjugation appropriate
+	/// for the <c>SubjectIsPlural</c> value of this pronoun.
+	/// </summary>
+	/// <param name="singularVerb"></param>
+	/// <param name="pluralVerb"></param>
+	/// <returns></returns>
 	public string GetSubjectVerb(string singularVerb, string pluralVerb )
 	{
 		return SubjectIsPlural
-			? $"{SubjectPronoun} {pluralVerb}"
-			: $"{SubjectPronoun} {singularVerb}";
+			? $"{pluralVerb}"
+			: $"{singularVerb}";
 	}
 }

@@ -1,7 +1,7 @@
 {
   "Name": "Nonbinary",
   "SubjectPronoun": "they",
-  "SubjectIsPlural": false,
+  "SubjectIsPlural": true,
   "ObjectPronoun": "them",
   "PosessiveAdjective": "their",
   "PosessivePronoun": "theirs",

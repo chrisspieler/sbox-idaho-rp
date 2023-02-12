@@ -50,6 +50,9 @@ public partial class Idahoid : AnimatedEntity
 		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
 		ClientOutfit = citizenData.DefaultOutfit;
 		DefaultOutfit.DressEntity( this );
+		var spPlayer = Gender.SubjectPronoun.ToCapitalized();
+		var svSmell = Gender.GetSubjectVerb( "smells", "smell" );
+		Log.Info( $"Say hello to {RpName}! {spPlayer} {svSmell} nice!" );
 		if ( !Game.IsClient )
 		{
 			JobManager.SetJob( "job_neet", this );
