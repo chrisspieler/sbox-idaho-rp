@@ -1,10 +1,12 @@
-﻿using Sandbox;
+﻿using IdahoRP.Api;
+using Sandbox;
 
 namespace IdahoRP;
 
 public partial class Idahoid
 {
 	[Net] public string RpName { get; set; }
+	[Net] public Gender Gender { get; set; }
 	public ClothingContainer DefaultOutfit { get; set; }
 	[Net] public float PocketMoney { get; set; } = 0.00f;
 	[Net] public Job CurrentJob { get; set; }

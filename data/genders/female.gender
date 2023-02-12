@@ -1,8 +1,10 @@
 {
   "Name": "Female",
   "SubjectPronoun": "she",
+  "SubjectIsPlural": false,
   "ObjectPronoun": "her",
   "PosessiveAdjective": "her",
   "PosessivePronoun": "hers",
-  "ReflexivePronoun": "herself"
+  "ReflexivePronoun": "herself",
+  "RarityFactor": 2
 }

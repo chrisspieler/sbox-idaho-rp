@@ -1,8 +1,10 @@
 {
-  "Name": null,
-  "SubjectPronoun": null,
-  "ObjectPronoun": null,
-  "PosessiveAdjective": null,
-  "PosessivePronoun": null,
-  "ReflexivePronoun": null
+  "Name": "Male",
+  "SubjectPronoun": "he",
+  "SubjectIsPlural": false,
+  "ObjectPronoun": "him",
+  "PosessiveAdjective": "his",
+  "PosessivePronoun": "his",
+  "ReflexivePronoun": "himself",
+  "RarityFactor": 2
 }

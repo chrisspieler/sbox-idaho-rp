@@ -1,8 +1,10 @@
 {
   "Name": "Nonbinary",
   "SubjectPronoun": "they",
+  "SubjectIsPlural": false,
   "ObjectPronoun": "them",
   "PosessiveAdjective": "their",
   "PosessivePronoun": "theirs",
-  "ReflexivePronoun": "themselves"
+  "ReflexivePronoun": "themselves",
+  "RarityFactor": 20
 }

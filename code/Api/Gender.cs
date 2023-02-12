@@ -33,7 +33,14 @@ public class Gender : GameResource
 	/// A reflexive pronoun. Example: "I'm afraid that [name] just blue himself/herself/themselves."
 	/// </summary>
 	public string ReflexivePronoun { get; set; }
-
+	public float RarityFactor { get; set; } = 20f;
+	
+	public string SimplePronouns()
+	{
+		var sp = SubjectPronoun ?? "null";
+		var op = ObjectPronoun ?? "null";
+		return $"{sp}/{op}";
+	}
 
 	public string GetSubjectVerb(string singularVerb, string pluralVerb )
 	{

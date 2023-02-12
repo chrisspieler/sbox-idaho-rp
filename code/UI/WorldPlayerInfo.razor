@@ -4,7 +4,7 @@
 
 <style>
     .player-info-panel{
-        height: 100px;
+        height: 120px;
         padding: 5px;
         border-radius: 10px;
         background-color: color(0,0,0,0.2);
@@ -18,8 +18,8 @@
         font-size: 36px;
     }
 
-    #jobTitle {
-        font-size: 28px;
+    .small-text{
+        font-size: 18px;
         font-weight: light;
     }
 
@@ -31,7 +31,8 @@
 <root>
     <div class="player-info-panel">
         <div id="playerName">@(Player?.RpName ?? "null")</div>
-        <div id="jobTitle">@(Player?.CurrentJob?.Title ?? "null")</div>
+        <div class="small-text">@(GetGender())</div>
+        <div class="small-text">@(Player?.CurrentJob?.Title ?? "null")</div>
         <StatusBar GetMaxValue=@GetMaxHealth GetCurrentValue=@GetHealth FillColor=@HealthColor/>
     </div>
 </root>
@@ -42,4 +43,6 @@
     public float GetMaxHealth() => Player.GetStat(PlayerStat.MaxHealth);
     public float GetHealth() => Player.GetStat(PlayerStat.Health);
     public Color HealthColor = new Color(0.69f, 0.10f, 0.22f, 1.00f);
+
+    private string GetGender() => Player?.Gender?.SimplePronouns() ?? "No pronouns??";
 }

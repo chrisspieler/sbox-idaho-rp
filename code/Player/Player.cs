@@ -42,6 +42,7 @@ public partial class Idahoid : AnimatedEntity
 			citizenData.DefaultOutfit.Deserialize( avatarData );
 		}
 		RpName = citizenData.Name;
+		Gender = citizenData.Gender;
 		DefaultOutfit = citizenData.DefaultOutfit;
 		CurrentJob = citizenData.CurrentJob;
 		CreateInfoPanel();
