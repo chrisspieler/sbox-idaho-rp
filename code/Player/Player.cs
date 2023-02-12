@@ -37,7 +37,8 @@ public partial class Idahoid : AnimatedEntity
 			{
 				Name = cl.Name,
 				DefaultOutfit = new ClothingContainer(),
-				CurrentJob = null
+				CurrentJob = null,
+				Gender = CitizenData.GenderPicker.GetNext() // TODO: Let the player choose this.
 			};
 			citizenData.DefaultOutfit.Deserialize( avatarData );
 		}
