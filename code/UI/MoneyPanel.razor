@@ -1,0 +1,23 @@
+﻿@using Sandbox;
+
+@inherits Sandbox.UI.Panel
+@namespace IdahoRP.UI
+
+<root>
+    <p>Shrekturday</p>
+    <div class="hr"/>
+	<p>@(Player.PocketMoney.ToString("C2"))</p>
+</root>
+
+@code{
+    public MoneyPanel()
+    {
+        Player = (Idahoid)Game.LocalPawn;
+    }
+    public Idahoid Player { get; set; }
+
+    protected override int BuildHash()
+    {
+        return Player.PocketMoney.GetHashCode();
+    }
+}

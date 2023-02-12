@@ -6,6 +6,7 @@ public partial class Idahoid
 {
 	[Net] public string RpName { get; set; }
 	public ClothingContainer DefaultOutfit { get; set; }
+	[Net] public float PocketMoney { get; set; } = 0.00f;
 	[Net] public Job CurrentJob { get; set; }
 	public ClothingContainer ClientOutfit { get; set; } = new ClothingContainer();
 	[Net] private float _maxHealth { get; set; } = 100f;
@@ -15,4 +16,9 @@ public partial class Idahoid
 	[Net] private float _stamina { get; set; } = 60f;
 	[Net] private float _maxStamina { get; set; } = 60f;
 	[Net] private float _staminaRegenRate { get; set; } = 10f;
+
+	public void GiveCash(float amount )
+	{
+		PocketMoney += amount;
+	}
 }

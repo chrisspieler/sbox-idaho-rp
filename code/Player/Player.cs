@@ -92,7 +92,10 @@ public partial class Idahoid : AnimatedEntity
 	{
 		Position = position == null ? GetRandomSpawnPoint() : position.Value;
 
-		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( -16, 16, 0 ), new Vector3( 16, 16, 72 ) );
+		SetupPhysicsFromOrientedCapsule(
+			PhysicsMotionType.Keyframed,
+			Capsule.FromHeightAndRadius( 72, Controller.BodyGirth / 2 )
+		);
 
 		Health = 100;
 		LifeState = LifeState.Alive;

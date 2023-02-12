@@ -1,9 +1,10 @@
 ﻿@using System
 @using Sandbox;
-
-@inherits Sandbox.UI.RootPanel
+@using Sandbox.UI;
 
 @namespace IdahoRP.UI
+@inherits Sandbox.UI.RootPanel
+@attribute [StyleSheet("UI/Styles/idaho_rp.scss")]
 
 <style>
     .status-bar-list{
@@ -26,12 +27,13 @@
             GetMaxValue=@GetMaxStamina
             FillColor=@StaminaColor/>
     </div>
+    <MoneyPanel class="panel"/>
 </root>
 
 @code {
-    public override void Tick()
+    public Hud()
     {
-        Player = Game.LocalPawn as Idahoid;
+        Player = (Idahoid)Game.LocalPawn;
     }
     public Idahoid Player {get; private set;}
 

@@ -1,0 +1,19 @@
+﻿@using Sandbox;
+
+@inherits Sandbox.UI.Panel
+@namespace IdahoRP.UI
+
+<style>
+	FloatingMessage {
+		font-size: 18px;
+	}
+</style>
+
+<root>
+	@(Message)
+</root>
+
+@code {
+	public string Message { get; set; }
+	public Color Color { get; set; }
+}
