@@ -28,6 +28,22 @@ public static class Commands
 		return client;
 	}
 
+	[ConCmd.Admin("devcam")]
+	public static void ToggleDevCam()
+	{
+		var client = ConsoleSystem.Caller;
+		var camera = client.Components.Get<DevCamera>( true );
+
+		if ( camera == null )
+		{
+			camera = new DevCamera();
+			client.Components.Add( camera );
+			return;
+		}
+
+		camera.Enabled = !camera.Enabled;
+	}
+
 	[ConCmd.Server("setname")]
 	public static void SetName(long steamId, string name )
 	{

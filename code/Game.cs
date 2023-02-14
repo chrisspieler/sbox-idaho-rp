@@ -40,7 +40,6 @@ public partial class IdahoGame : BaseGameManager
 
 	private void JoinGame(IClient cl )
 	{
-		CitizenData.PrintCitizenData();
 		var pawn = new Idahoid( cl );
 		cl.Pawn = pawn;
 
