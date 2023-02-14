@@ -1,14 +1,38 @@
 ﻿using IdahoRP.Api;
 using Sandbox;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace IdahoRP;
 
 public partial class CitizenData : BaseNetworkable
 {
+	private static Dictionary<long, CitizenData> _citizenDatabase = new();
 	[Net] public string Name { get; set; }
-	public ClothingContainer DefaultOutfit { get; set; }
-	public Job CurrentJob { get; set; }
-	public Gender Gender { get; set; }
+	[Net] public ClothingContainer DefaultOutfit { get; set; }
+	[Net] public Job CurrentJob { get; set; }
+	[Net] public Gender Gender { get; set; }
+	
+	/// <summary>
+	/// Given a Steam ID, returns the existing <c>CitizenData</c> for that player or bot, 
+	/// or provides a randomized default if no data exists yet.
+	/// </summary>
+	/// <param name="steamId">The client of the player or bot whose data shall be retrieved.</param>
+	public static CitizenData GetData(long steamId)
+	{
+		if ( !_citizenDatabase.ContainsKey( steamId ) )
+		{
+			Log.Info( $"No existing CitizenData found for Steam ID {steamId}. Starting fresh." );
+			CitizenData newData = GenerateRandom();
+			_citizenDatabase[steamId] = newData;
+			return newData;
+		}
+		else
+		{
+			return _citizenDatabase[steamId];
+		}
+	}
 
 	public static CitizenData GenerateRandom()
 	{
@@ -45,8 +69,8 @@ public partial class CitizenData : BaseNetworkable
 	private static void BuildRandomGenderList()
 	{
 		_genderPicker = new RandomChancer<Gender>();
-		var genders = ResourceLibrary.GetAll<Gender>();
-		foreach (var gender in genders)
+		var allGenders = ResourceLibrary.GetAll<Gender>();
+		foreach (var gender in allGenders)
 		{
 			_genderPicker.AddItem( gender, 100 / gender.RarityFactor );
 		}

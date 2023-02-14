@@ -5,21 +5,22 @@ using Sandbox.UI;
 
 namespace IdahoRP;
 
-public partial class IdahoRP : BaseGameManager
+public partial class IdahoGame : BaseGameManager
 {
 	[ClientInput] public Vector3 InputDirection { get; protected set; }
 
 	private bool _botsInitialized = false;
 	private RootPanel _welcomePage;
 
-	private static IdahoRP _instance;
+	private static IdahoGame _instance;
 
-	public IdahoRP()
+	public IdahoGame()
 	{
 		_instance = this;
 		if (Game.IsClient)
 		{
-			_welcomePage = new WelcomePage();
+			CitizenData data = CitizenData.GetData( Game.SteamId );
+			_welcomePage = new WelcomePage( data );
 		}
 		else
 		{

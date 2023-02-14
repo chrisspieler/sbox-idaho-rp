@@ -1,23 +1,87 @@
-﻿@using Sandbox;
+﻿@using System.Collections.Generic;
+@using Sandbox;
 @using Sandbox.UI;
+@using System.Linq;
+@using IdahoRP.Api;
+@using Sandbox.UI;
+
 @namespace IdahoRP.UI
 @inherits Sandbox.UI.RootPanel;
 @attribute [StyleSheet("UI/Styles/idaho_rp.scss")]
 
 <root>
-    <div class="panel">
-        <header>
-            <h1 class="title">Welcome to Idaho RP</h1>
-        </header>
-        <div "sub-panel">
-            <button onclick="@(() => JoinGame())">Join Game</button>
+    <header>
+        <h1 class="title">Welcome to Idaho RP</h1>
+    </header>
+    <div id="nameEntry" class="thin-border">
+        <h2>Choose your name</h2>
+        <div class="hr"/>
+        <div id="nameEntryBottom">
+            <button class="icon tiny clear" onclick=@(_ => GenerateRandomName())>casino</button>
+            <TextEntry @ref="NameText"/>
         </div>
+
     </div>
+    <div id="genderPicker" class="thin-border">
+        <h2>Select your gender</h2>
+        <div class="hr"/>
+        <ListBox @ref="GenderList" id="genderList">
+            @foreach(var gender in _genders)
+            {
+                <div id="@gender.ResourceId" class="list-item">
+                    <p class="gender-name">@(gender.Name.ToCapitalized())</p>
+                    <p class="short-pnouns">@(gender.SimplePronouns())</p>
+                </div>
+            }
+            <button id="btnAddGender" class="clear noselect">
+                <div class="icon">add</div>
+                <p>Add Gender</p>
+            </button>
+        </ListBox>
+    </div>
+    <button class="solid" onclick="@(() => JoinGame())">Join Game</button>
 </root>
 
 @code {
+    public Gender SelectedGender { get; private set; }
+    public CitizenData PlayerData { get; set; }
+    public ListBox GenderList { get; set; }
+    public TextEntry NameText { get; set; }
+
+    private IEnumerable<Gender> _genders;
+    public WelcomePage(CitizenData playerData)
+    {
+        PlayerData = playerData;
+        _genders = ResourceLibrary.GetAll<Gender>();
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (!firstTime)
+            return;
+
+        GenderList.OnSelectionChanged += OnGenderSelected;
+        NameText.Text = PlayerData.Name;
+    }
+
+    private Panel _selectedGenderPanel;
+
+    public void GenerateRandomName()
+    {
+        var randomName = RandomNameGenerator.GenerateRandomName();
+        PlayerData.Name = randomName;
+        NameText.Text = randomName;
+    }
+
+    public void OnGenderSelected(object sender, Panel panel)
+    {
+        int genderResId = int.Parse(panel.Id);
+        SelectedGender = _genders.First(g => g.ResourceId == genderResId);
+    }
     public void JoinGame()
     {
+        ConsoleSystem.Run("setname", PlayerData.Name);
+        ConsoleSystem.Run("setgender", PlayerData.Gender.ResourceId);
         ConsoleSystem.Run("joingame");
     }
 }
