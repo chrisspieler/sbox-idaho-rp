@@ -23,23 +23,15 @@ public partial class Idahoid : AnimatedEntity
 
 	public Idahoid(IClient cl) : this()
 	{
-		CitizenData citizenData;
+		var citizenData = CitizenData.GetData( cl.SteamId );
 		if ( cl.IsBot )
 		{
-			citizenData = BotManager.GetCitizenData( cl.GetBotId() );
 			Log.Trace( $"Configuring pawn for citizen bot named: {citizenData.Name}" );
 		}
 		else
 		{
 			string avatarData = cl.GetClientData( "avatar" );
 			Log.Trace( $"{cl} - Loaded avatar data: {avatarData}" );
-			citizenData = new CitizenData()
-			{
-				Name = cl.Name,
-				DefaultOutfit = new ClothingContainer(),
-				CurrentJob = null,
-				Gender = CitizenData.GenderPicker.GetNext() // TODO: Let the player choose this.
-			};
 			citizenData.DefaultOutfit.Deserialize( avatarData );
 		}
 		RpName = citizenData.Name;
@@ -50,6 +42,7 @@ public partial class Idahoid : AnimatedEntity
 		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
 		ClientOutfit = citizenData.DefaultOutfit;
 		DefaultOutfit.DressEntity( this );
+		CitizenData.PrintCitizenData();
 		var spPlayer = Gender.SubjectPronoun.ToCapitalized();
 		var svSmell = Gender.GetSubjectVerb( "smells", "smell" );
 		Log.Info( $"Say hello to {RpName}! {spPlayer} {svSmell} nice!" );

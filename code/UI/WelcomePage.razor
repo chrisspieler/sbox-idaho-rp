@@ -43,15 +43,16 @@
 </root>
 
 @code {
-    public Gender SelectedGender { get; private set; }
-    public CitizenData PlayerData { get; set; }
     public ListBox GenderList { get; set; }
     public TextEntry NameText { get; set; }
+    private string _playerName { get; set; }
+    private int _playerGenderId { get; set; }
 
     private IEnumerable<Gender> _genders;
-    public WelcomePage(CitizenData playerData)
+    public WelcomePage(string playerName, int playerGenderId)
     {
-        PlayerData = playerData;
+        _playerName = playerName;
+        _playerGenderId = playerGenderId;
         _genders = ResourceLibrary.GetAll<Gender>();
     }
 
@@ -61,7 +62,8 @@
             return;
 
         GenderList.OnSelectionChanged += OnGenderSelected;
-        NameText.Text = PlayerData.Name;
+        NameText.Text = _playerName;
+        GenderList.SelectedItem = GenderList.Children.First(c => c.Id == _playerGenderId.ToString());
     }
 
     private Panel _selectedGenderPanel;
@@ -69,19 +71,18 @@
     public void GenerateRandomName()
     {
         var randomName = RandomNameGenerator.GenerateRandomName();
-        PlayerData.Name = randomName;
+        _playerName = randomName;
         NameText.Text = randomName;
     }
 
     public void OnGenderSelected(object sender, Panel panel)
     {
-        int genderResId = int.Parse(panel.Id);
-        SelectedGender = _genders.First(g => g.ResourceId == genderResId);
+        _playerGenderId = int.Parse(panel.Id);
     }
     public void JoinGame()
     {
-        ConsoleSystem.Run("setname", PlayerData.Name);
-        ConsoleSystem.Run("setgender", PlayerData.Gender.ResourceId);
+        Commands.SetName(Game.SteamId, NameText.Text);
+        Commands.SetGender(Game.SteamId, _playerGenderId);
         ConsoleSystem.Run("joingame");
     }
 }

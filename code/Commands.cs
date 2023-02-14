@@ -29,14 +29,27 @@ public static class Commands
 	}
 
 	[ConCmd.Server("setname")]
-	public static void SetName(string name )
+	public static void SetName(long steamId, string name )
 	{
-		((Idahoid)Game.LocalPawn).RpName = name;
+		//var client = ConsoleSystem.Caller.Client;
+		//if (  client == null )
+		//{
+		//	Log.Info( $"Command {nameof( SetName ).ToLower()} must be called by a client." );
+		//	return;
+		//}
+		CitizenData.GetData( steamId ).Name = name;
+		Log.Info( $"{ConsoleSystem.Caller.Client} - Name set to \"{name}\"." );
 	}
 
 	[ConCmd.Server("setgender")]
 	public static void SetGender(string gender )
 	{
+		var client = ConsoleSystem.Caller.Client;
+		if ( client == null )
+		{
+			Log.Info( $"Command {nameof( SetGender ).ToLower()} must be called by a client." );
+			return;
+		}
 		var genderRes = ResourceLibrary
 			.GetAll<Gender>()
 			.FirstOrDefault( g => g.Name.ToLower() == gender.ToLower() );
@@ -45,13 +58,19 @@ public static class Commands
 			Log.Info( $"No gender found with the name \"{gender}\". Feel free to add it yourself through the character info screen!" );
 			return;
 		}
-		Log.Info( $"{ConsoleSystem.Caller.Client} - Gender set to \"{genderRes.Name}\"." );
-		((Idahoid)Game.LocalPawn).Gender = genderRes;
+		CitizenData.GetData( client.SteamId ).Gender = genderRes;
+		Log.Info( $"{client} - Gender set to \"{genderRes.Name}\"." );
 	}
 
 	[ConCmd.Server("setgender")]
-	public static void SetGender(int genderResourceId )
+	public static void SetGender(long steamId, int genderResourceId )
 	{
+		//var client = ConsoleSystem.Caller.Client;
+		//if ( client == null )
+		//{
+		//	Log.Info( $"Command {nameof( SetGender ).ToLower()} must be called by a client." );
+		//	return;
+		//}
 		var genderRes = ResourceLibrary
 			.GetAll<Gender>()
 			.FirstOrDefault( g => g.ResourceId == genderResourceId );
@@ -60,8 +79,8 @@ public static class Commands
 			Log.Info( "No gender found with the specified resource ID." );
 			return;
 		}
+		CitizenData.GetData( steamId ).Gender = genderRes;
 		Log.Info( $"{ConsoleSystem.Caller.Client} - Gender set to \"{genderRes.Name}\"." );
-		((Idahoid)Game.LocalPawn).Gender = genderRes;
 	}
 
 	[ConCmd.Server( "givemoney" )]

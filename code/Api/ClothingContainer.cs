@@ -8,10 +8,10 @@ namespace IdahoRP;
 /// <summary>
 /// Holds a collection of clothing items. Won't let you add items that aren't compatible.
 /// </summary>
-public class ClothingContainer
+public partial class ClothingContainer
 {
 
-	public List<Clothing> Clothing = new();
+	public List<Clothing> Clothing { get; set; } = new();
 
 	/// <summary>
 	/// Add a clothing item if we don't already contain it, else remove it

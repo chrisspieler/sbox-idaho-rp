@@ -10,7 +10,7 @@ public partial class CitizenData : BaseNetworkable
 {
 	private static Dictionary<long, CitizenData> _citizenDatabase = new();
 	[Net] public string Name { get; set; }
-	[Net] public ClothingContainer DefaultOutfit { get; set; }
+	public ClothingContainer DefaultOutfit { get; set; }
 	[Net] public Job CurrentJob { get; set; }
 	[Net] public Gender Gender { get; set; }
 	
@@ -31,6 +31,18 @@ public partial class CitizenData : BaseNetworkable
 		else
 		{
 			return _citizenDatabase[steamId];
+		}
+	}
+
+	[ConCmd.Admin("print_citizen_data")]
+	public static void PrintCitizenData()
+	{
+		Log.Info( $"Printing data for {_citizenDatabase.Count} citizens." );
+		foreach(KeyValuePair<long, CitizenData> kvp in _citizenDatabase )
+		{
+			long steamId = kvp.Key;
+			CitizenData citizen = kvp.Value;
+			Log.Info( $"SteamID: {steamId}, Name: \"{citizen.Name}\", Gender: \"{citizen.Gender.Name}\", Job: \"{citizen.CurrentJob?.Title}\"" );
 		}
 	}
 
