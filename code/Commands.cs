@@ -28,6 +28,18 @@ public static class Commands
 		return client;
 	}
 
+	[ConCmd.Server("respawn")]
+	public static void Respawn()
+	{
+		var client = ConsoleSystem.Caller?.Pawn as Idahoid;
+		if (client == null )
+		{
+			Log.Info( "Respawn command not valid for non-players or clients without pawns." );
+			return;
+		}
+		client.Respawn();
+	}
+
 	[ConCmd.Admin("devcam")]
 	public static void ToggleDevCam()
 	{
