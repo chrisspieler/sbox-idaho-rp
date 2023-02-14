@@ -6,28 +6,22 @@
 @inherits Sandbox.UI.RootPanel
 @attribute [StyleSheet("UI/Styles/idaho_rp.scss")]
 
-<style>
-    .status-bar-list{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        height: 500px;
-        width: 60%;
-    }
-</style>
 <root>
-    <div class="status-bar-list">
-        <StatusBar GetCurrentValue=@GetHealth
-            GetMaxValue=@GetMaxHealth
-            FillColor=@HealthColor/>
-        <StatusBar GetCurrentValue=@GetMagic
-            GetMaxValue=@GetMaxMagic
-            FillColor=@MagicColor/>
-        <StatusBar GetCurrentValue=@GetStamina
-            GetMaxValue=@GetMaxStamina
-            FillColor=@StaminaColor/>
+    <div id="topRow">
+        <div id="statusBarList">
+            <StatusBar GetCurrentValue=@GetHealth
+                GetMaxValue=@GetMaxHealth
+                FillColor=@HealthColor/>
+            <StatusBar GetCurrentValue=@GetMagic
+                GetMaxValue=@GetMaxMagic
+                FillColor=@MagicColor/>
+            <StatusBar GetCurrentValue=@GetStamina
+                GetMaxValue=@GetMaxStamina
+                FillColor=@StaminaColor/>
+        </div>
+        <MoneyPanel class="panel"/>
     </div>
-    <MoneyPanel class="panel"/>
+    <ChatBox/>
 </root>
 
 @code {
