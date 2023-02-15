@@ -63,6 +63,8 @@ public partial class IdahoGame : BaseGameManager
 	[Event.Client.PostCamera]
 	private void AdjustClientCamera()
 	{
+		if ( Game.LocalPawn != null )
+			return;
 		var spawnCam = GetSpawnCam();
 		if ( spawnCam == null )
 		{
