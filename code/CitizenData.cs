@@ -1,14 +1,17 @@
 ﻿using IdahoRP.Api;
+using IdahoRP.Api.Data;
 using Sandbox;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace IdahoRP;
 
-public partial class CitizenData : BaseNetworkable
+public partial class CitizenData : BaseNetworkable, IDbRecord
 {
 	private static Dictionary<long, CitizenData> _citizenDatabase = new();
+	public Guid Id { get; }
 	[Net] public string Name { get; set; }
 	public ClothingContainer DefaultOutfit { get; set; }
 	[Net] public Job CurrentJob { get; set; }
@@ -66,6 +69,9 @@ public partial class CitizenData : BaseNetworkable
 			return _genderPicker;
 		}
 	}
+
+	public bool IsDirty => throw new NotImplementedException();
+
 	private static RandomChancer<Gender> _genderPicker;
 
 	[ConCmd.Server("genderlist")]

@@ -1,7 +1,9 @@
 ﻿using IdahoRP.Api;
+using IdahoRP.Repositories.FileStorage;
 using IdahoRP.UI;
 using Sandbox;
 using Sandbox.UI;
+using System.Linq;
 
 namespace IdahoRP;
 
@@ -17,10 +19,19 @@ public partial class IdahoGame : BaseGameManager
 	public IdahoGame()
 	{
 		_instance = this;
-		if (!Game.IsClient)
+		if ( Game.IsServer )
 		{
+			var citizens = new CitizenFileRepository();
 			JobManager.Initialize();
 		}
+	}
+
+	public CameraEntity GetSpawnCam()
+	{
+		Entity spawnCamEnt = Entity
+			.All
+			.FirstOrDefault( e => e.Tags.Has( "spawncam" ) );
+		return spawnCamEnt as CameraEntity;
 	}
 
 	public override void ClientJoined( IClient cl )
@@ -34,19 +45,33 @@ public partial class IdahoGame : BaseGameManager
 		else
 		{
 			var citizen = CitizenData.GetData( cl.SteamId );
-			ShowWelcomePage(To.Single(cl), citizen.Name, citizen.Gender.ResourceId);
+			ShowWelcomePage( To.Single( cl ), citizen.Name, citizen.Gender.ResourceId );
 		}
 	}
 
-	private void JoinGame(IClient cl )
+	private void JoinGame( IClient cl )
 	{
 		var pawn = new Idahoid( cl );
 		cl.Pawn = pawn;
 
 		pawn.Respawn();
 
-		CloseWelcomePage(To.Single(cl));
+		CloseWelcomePage( To.Single( cl ) );
 		pawn.ShowHud();
+	}
+
+	[Event.Client.PostCamera]
+	private void AdjustClientCamera()
+	{
+		var spawnCam = GetSpawnCam();
+		if ( spawnCam == null )
+		{
+			Log.Info( "Map does not contain spawncam." );
+			return;
+		}
+		Camera.Main.Position = spawnCam.Position;
+		Camera.Main.Rotation = spawnCam.Rotation;
+		Camera.Main.FieldOfView = spawnCam.Fov;
 	}
 
 	[ClientRpc]
