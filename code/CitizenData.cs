@@ -1,17 +1,14 @@
 ﻿using IdahoRP.Api;
-using IdahoRP.Api.Data;
+using IdahoRP.Repositories.FileStorage;
 using Sandbox;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace IdahoRP;
 
-public partial class CitizenData : BaseNetworkable, IDbRecord
+public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 {
-	private static Dictionary<long, CitizenData> _citizenDatabase = new();
-	public Guid Id { get; }
+	public long Id { get; }
 	[Net] public string Name { get; set; }
 	public ClothingContainer DefaultOutfit { get; set; }
 	[Net] public Job CurrentJob { get; set; }
@@ -24,28 +21,28 @@ public partial class CitizenData : BaseNetworkable, IDbRecord
 	/// <param name="steamId">The client of the player or bot whose data shall be retrieved.</param>
 	public static CitizenData GetData(long steamId)
 	{
-		if ( !_citizenDatabase.ContainsKey( steamId ) )
+		var citizenDb = DataManager.CitizenDb;
+		if ( !citizenDb.Exists( steamId ) )
 		{
 			Log.Info( $"No existing CitizenData found for Steam ID {steamId}. Starting fresh." );
 			CitizenData newData = GenerateRandom();
-			_citizenDatabase[steamId] = newData;
+			citizenDb[steamId] = newData;
 			return newData;
 		}
 		else
 		{
-			return _citizenDatabase[steamId];
+			return citizenDb[steamId];
 		}
 	}
 
 	[ConCmd.Admin("print_citizen_data")]
 	public static void PrintCitizenData()
 	{
-		Log.Info( $"Printing data for {_citizenDatabase.Count} citizens." );
-		foreach(KeyValuePair<long, CitizenData> kvp in _citizenDatabase )
+		var citizenDb = DataManager.CitizenDb;
+		Log.Info( $"Printing data for {citizenDb.Count} citizens." );
+		foreach(var citizen in citizenDb.GetAll() )
 		{
-			long steamId = kvp.Key;
-			CitizenData citizen = kvp.Value;
-			Log.Info( $"SteamID: {steamId}, Name: \"{citizen.Name}\", Gender: \"{citizen.Gender.Name}\", Job: \"{citizen.CurrentJob?.Title}\"" );
+			Log.Info( $"SteamID: {citizen.Id}, Name: \"{citizen.Name}\", Gender: \"{citizen.Gender.Name}\", Job: \"{citizen.CurrentJob?.Title}\"" );
 		}
 	}
 
@@ -70,7 +67,7 @@ public partial class CitizenData : BaseNetworkable, IDbRecord
 		}
 	}
 
-	public bool IsDirty => throw new NotImplementedException();
+	public bool IsDirty => false;
 
 	private static RandomChancer<Gender> _genderPicker;
 

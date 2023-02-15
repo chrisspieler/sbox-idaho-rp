@@ -21,7 +21,6 @@ public partial class IdahoGame : BaseGameManager
 		_instance = this;
 		if ( Game.IsServer )
 		{
-			var citizens = new CitizenFileRepository();
 			JobManager.Initialize();
 		}
 	}
