@@ -8,12 +8,16 @@ namespace IdahoRP;
 
 public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 {
-	public long Id { get; }
-	[Net] public string Name { get; set; }
-	public ClothingContainer DefaultOutfit { get; set; }
-	[Net] public Job CurrentJob { get; set; }
-	[Net] public Gender Gender { get; set; }
-	
+	[Net, Dirtyable] public string Name { get; set; }
+	[Dirtyable] public ClothingContainer DefaultOutfit { get; set; }
+	[Net, Dirtyable] public Job CurrentJob { get; set; }
+	[Net, Dirtyable] public Gender Gender { get; set; }
+
+	// IDbRecord
+	public long Id { get; private set; }
+	public bool IsDirty { get; set; } = false;
+	public bool ShouldDelete { get; set; } = false;
+
 	/// <summary>
 	/// Given a Steam ID, returns the existing <c>CitizenData</c> for that player or bot, 
 	/// or provides a randomized default if no data exists yet.
@@ -26,6 +30,7 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 		{
 			Log.Info( $"No existing CitizenData found for Steam ID {steamId}. Starting fresh." );
 			CitizenData newData = GenerateRandom();
+			newData.Id = steamId;
 			citizenDb[steamId] = newData;
 			return newData;
 		}
@@ -66,8 +71,6 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 			return _genderPicker;
 		}
 	}
-
-	public bool IsDirty => false;
 
 	private static RandomChancer<Gender> _genderPicker;
 

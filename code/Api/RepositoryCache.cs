@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sandbox;
 
 namespace IdahoRP.Api;
 
@@ -15,42 +14,125 @@ public class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
 
 	private IRepository<T,K> _dataSource;
 	private Dictionary<K, T> _cache = new();
+	private DirtyChecker<T> _dirtyChecker = new DirtyChecker<T>();
+
+	[Event.Tick.Server]
+	private void Tick()
+	{
+		UpdateIsDirty();
+		HonorShouldDelete();
+		WriteDirtyValues();
+	}
+
+	private void UpdateIsDirty()
+	{
+		foreach ( var item in _cache.Values )
+		{
+			if ( _dirtyChecker.HasDirtied( item ) )
+			{
+				item.IsDirty = true;
+			}
+		}
+	}
+
+	private void HonorShouldDelete()
+	{
+		// Delete any item for which deletion has been requested.
+		var toDelete = _cache.Values.Where( p => p.ShouldDelete );
+		foreach ( var doomedItem in toDelete )
+		{
+			Delete( doomedItem );
+		}
+	}
+
+	private void WriteDirtyValues()
+	{
+		// Write all dirty items to the database.
+		foreach ( var item in _cache.Values )
+		{
+			if ( item.IsDirty )
+			{
+				_dataSource.Write( item );
+				item.IsDirty = false;
+			}
+		}
+	}
 
 	public T this[K id] 
 	{ 
-		get => throw new NotImplementedException(); 
-		set => throw new NotImplementedException(); 
+		get => Get(id); 
+		set => Write(value); 
 	}
 
-	public int Count => throw new NotImplementedException();
+	public int Count => _dataSource.Count;
 
 	public void Delete( T record )
 	{
-		throw new NotImplementedException();
+		_dataSource.Delete( record );
+		if ( _cache.ContainsKey( record.Id ) )
+		{
+			_cache.Remove( record.Id );
+		}
 	}
 
 	public bool Exists( K id )
 	{
-		throw new NotImplementedException();
+		if (_cache.ContainsKey(id))
+		{
+			return !_cache[id].ShouldDelete;
+		}
+		else
+		{
+			if ( _dataSource.Exists( id ) )
+			{
+				_cache[id] = _dataSource.Get( id );
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 	}
 
 	public T Get( K Id )
 	{
-		throw new NotImplementedException();
+		if ( _cache.ContainsKey( Id ) )
+		{
+			// The database is not the source of record, so the cache is returned as-is.
+			return _cache[Id];
+		}
+		else
+		{
+			var item = _dataSource.Get( Id );
+			if (item != null )
+			{
+				_cache[Id] = item;
+			}
+			return item;
+		}
 	}
 
 	public IEnumerable<T> GetAll()
 	{
-		throw new NotImplementedException();
+		// The database will not contain any data that the cache does not contain.
+		foreach(var item in _cache )
+		{
+			if ( item.Value.ShouldDelete )
+				continue;
+			yield return item.Value;
+		}
 	}
 
 	public IEnumerable<T> Where( Func<T, bool> predicate )
 	{
-		throw new NotImplementedException();
+		return GetAll().Where( predicate );
 	}
 
 	public void Write( T record )
 	{
-		throw new NotImplementedException();
+		_cache[record.Id] = record;
+		_dataSource.Write( record );
 	}
 }
