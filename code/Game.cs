@@ -44,7 +44,7 @@ public partial class IdahoGame : BaseGameManager
 		else
 		{
 			var citizen = CitizenData.GetData( cl.SteamId );
-			ShowWelcomePage( To.Single( cl ), citizen.Name, citizen.Gender.ResourceId );
+			ShowWelcomePage( To.Single( cl ), citizen.Name, citizen.GenderId );
 		}
 	}
 

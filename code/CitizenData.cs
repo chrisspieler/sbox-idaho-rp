@@ -3,20 +3,53 @@ using IdahoRP.Repositories.FileStorage;
 using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace IdahoRP;
 
 public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 {
+	[JsonRequired]
 	[Net, Dirtyable] public string Name { get; set; }
+	[JsonRequired]
 	[Dirtyable] public ClothingContainer DefaultOutfit { get; set; }
+	[JsonRequired]
 	[Net, Dirtyable] public Job CurrentJob { get; set; }
-	[Net, Dirtyable] public Gender Gender { get; set; }
+	[JsonIgnore]
+	[Dirtyable] public Gender Gender 
+	{
+		get => _gender;
+		set
+		{
+			_gender = value;
+			GenderId = value.ResourceId;
+		}
+	}
+	private Gender _gender;
+	[JsonRequired]
+	public int GenderId { get; set; }
+
+	public CitizenData()
+	{
+
+	}
+
+	[JsonConstructor]
+	public CitizenData(string name, ClothingContainer defaultOutfit, Job currentJob, int genderId, long id)
+	{
+		(Name, DefaultOutfit, CurrentJob, Id) = (name, defaultOutfit, currentJob, id);
+		Gender = ResourceLibrary.GetAll<Gender>().FirstOrDefault( g => g.ResourceId == genderId );
+		if (Gender == null )
+		{
+			Log.Error( $"No gender found for gender ID: {genderId}" );
+		}
+	}
 
 	// IDbRecord
 	public long Id { get; private set; }
-	public bool IsDirty { get; set; } = false;
-	public bool ShouldDelete { get; set; } = false;
+	[JsonIgnore] public bool IsDirty { get; set; } = false;
+	[JsonIgnore] public bool ShouldDelete { get; set; } = false;
 
 	/// <summary>
 	/// Given a Steam ID, returns the existing <c>CitizenData</c> for that player or bot, 

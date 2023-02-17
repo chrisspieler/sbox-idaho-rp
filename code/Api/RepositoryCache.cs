@@ -5,7 +5,7 @@ using Sandbox;
 
 namespace IdahoRP.Api;
 
-public class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
+public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
 {
 	public RepositoryCache(IRepository<T,K> dataSource)
 	{
@@ -16,8 +16,7 @@ public class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
 	private Dictionary<K, T> _cache = new();
 	private DirtyChecker<T> _dirtyChecker = new DirtyChecker<T>();
 
-	[Event.Tick.Server]
-	private void Tick()
+	public void Tick()
 	{
 		UpdateIsDirty();
 		HonorShouldDelete();

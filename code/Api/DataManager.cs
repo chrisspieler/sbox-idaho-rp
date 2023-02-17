@@ -15,8 +15,13 @@ public static class DataManager
 	{
 		CitizenDb = new FileRepository<CitizenData, long>().ToCached();
 	}
+	[Event.Tick.Server]
+	public static void Tick()
+	{
+		CitizenDb.Tick();
+	}
 
 	private static IRepositorySet _repos;
 
-	public static IRepository<CitizenData, long> CitizenDb { get; set; }
+	public static RepositoryCache<CitizenData, long> CitizenDb { get; set; }
 }

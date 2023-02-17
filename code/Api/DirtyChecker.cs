@@ -27,7 +27,7 @@ public class DirtyChecker<T>
 		int hashCode = 0;
 		foreach(var property in _dirtyableProperties )
 		{
-			hashCode ^= property.GetHashCode();
+			hashCode ^= property.GetValue(instance)?.GetHashCode() ?? 0;
 		}
 		bool hasChanged;
 		if (!_lastHashCode.ContainsKey(instance))

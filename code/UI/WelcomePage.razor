@@ -63,7 +63,14 @@
 
         GenderList.OnSelectionChanged += OnGenderSelected;
         NameText.Text = _playerName;
-        GenderList.SelectedItem = GenderList.Children.First(c => c.Id == _playerGenderId.ToString());
+        var matchingGender = GenderList.Children.FirstOrDefault(c => c.Id == _playerGenderId.ToString());
+        // If no gender ID matches the player ID, use the first one instead
+        if (matchingGender == null)
+        {
+            Log.Error($"No gender on this server matches the specified player gender: {_playerGenderId}");
+            matchingGender = GenderList.Children.First();
+        }
+        GenderList.SelectedItem = matchingGender;
     }
 
     private Panel _selectedGenderPanel;
