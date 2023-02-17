@@ -3,7 +3,7 @@
 namespace IdahoRP.Api;
 
 [AttributeUsage( AttributeTargets.Property, Inherited = true, AllowMultiple = true )]
-sealed class DirtyableAttribute : Attribute
+sealed class WatchAttribute : Attribute
 {
 
 }

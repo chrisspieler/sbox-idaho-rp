@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace IdahoRP.Api;
 
-public class DirtyChecker<T>
+public class ChangeChecker<T>
 {
 	private Dictionary<T, int> _lastHashCode = new();
-	private List<PropertyDescription> _dirtyableProperties;
+	private List<PropertyDescription> _watchedProperties;
 
-	public DirtyChecker()
+	public ChangeChecker()
 	{
 		var targetType = TypeLibrary.GetType<T>();
-		_dirtyableProperties = targetType
+		_watchedProperties = targetType
 			.Properties
-			.Where( m => m.HasAttribute<DirtyableAttribute>() )
+			.Where( m => m.HasAttribute<WatchAttribute>() )
 			.ToList();
 	}
 
-	public bool HasDirtied(T instance)
+	public bool HasChanged(T instance)
 	{
 		int hashCode = 0;
-		foreach(var property in _dirtyableProperties )
+		foreach(var property in _watchedProperties )
 		{
 			hashCode ^= property.GetValue(instance)?.GetHashCode() ?? 0;
 		}
@@ -33,7 +33,7 @@ public class DirtyChecker<T>
 		if (!_lastHashCode.ContainsKey(instance))
 		{
 			_lastHashCode[instance] = hashCode;
-			// It is assumed that entirely new items are not dirty.
+			// Entirely new items are unchanged from their initial form, so we return false here.
 			return false;
 		}
 		hasChanged = _lastHashCode[instance] != hashCode;

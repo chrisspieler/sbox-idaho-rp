@@ -14,7 +14,7 @@ public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbReco
 
 	private IRepository<T,K> _dataSource;
 	private Dictionary<K, T> _cache = new();
-	private DirtyChecker<T> _dirtyChecker = new DirtyChecker<T>();
+	private ChangeChecker<T> _changeChecker = new ChangeChecker<T>();
 
 	public void Tick()
 	{
@@ -27,7 +27,7 @@ public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbReco
 	{
 		foreach ( var item in _cache.Values )
 		{
-			if ( _dirtyChecker.HasDirtied( item ) )
+			if ( _changeChecker.HasChanged( item ) )
 			{
 				item.IsDirty = true;
 			}

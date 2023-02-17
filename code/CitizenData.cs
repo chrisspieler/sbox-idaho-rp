@@ -11,13 +11,13 @@ namespace IdahoRP;
 public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 {
 	[JsonRequired]
-	[Net, Dirtyable] public string Name { get; set; }
+	[Net, Watch] public string Name { get; set; }
 	[JsonRequired]
-	[Dirtyable] public ClothingContainer DefaultOutfit { get; set; }
+	[Watch] public ClothingContainer DefaultOutfit { get; set; }
 	[JsonRequired]
-	[Net, Dirtyable] public Job CurrentJob { get; set; }
+	[Net, Watch] public Job CurrentJob { get; set; }
 	[JsonIgnore]
-	[Dirtyable] public Gender Gender 
+	[Watch] public Gender Gender 
 	{
 		get => _gender;
 		set

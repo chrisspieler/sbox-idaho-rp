@@ -41,11 +41,25 @@ public interface IRepository<T,K> where T : IDbRecord<K>
 	/// </summary>
 	/// <param name="record">The record that sahll be deleted.</param>
 	void Delete( T record );
+	/// <summary>
+	/// Returns true if a record with the specified id exists.
+	/// </summary>
+	/// <param name="id">The record id that shall be searched for.</param>
 	bool Exists( K id );
+	/// <summary>
+	/// Returns the count of records managed by this repository.
+	/// </summary>
 	int Count { get; }
+	/// <summary>
+	/// The get and set accessors of this indexer wrap <c>Get(<typeparamref name="K"/> id)</c> 
+	/// and <c>Write(<typeparamref name="T"/> record)</c> respectively.
+	/// </summary>
+	/// <param name="id">The id of the record that shall be retrieved by the get accessor.</param>
 	T this[K id]
 	{
 		get => Get( id );
+		// What happens if someone calls "this[id] = record" where record has a different ID?
+		// TODO: Revisit this.
 		set => Write( value );
 	}
 }
