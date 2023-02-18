@@ -14,7 +14,6 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 	[Net, Watch] public string Name { get; set; }
 	[JsonRequired]
 	[Watch] public ClothingContainer DefaultOutfit { get; set; }
-	[JsonRequired]
 	[Net, Watch] public Job CurrentJob { get; set; }
 	[JsonIgnore]
 	[Watch] public Gender Gender 
@@ -29,6 +28,7 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 	private Gender _gender;
 	[JsonRequired]
 	public int GenderId { get; set; }
+	[Watch, Net] public float PocketMoney { get; set; }
 
 	public CitizenData()
 	{
@@ -36,9 +36,11 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 	}
 
 	[JsonConstructor]
-	public CitizenData(string name, ClothingContainer defaultOutfit, Job currentJob, int genderId, long id)
+	public CitizenData(
+		string name, ClothingContainer defaultOutfit, Job currentJob, 
+		int genderId, long id, float pocketMoney)
 	{
-		(Name, DefaultOutfit, CurrentJob, Id) = (name, defaultOutfit, currentJob, id);
+		(Name, DefaultOutfit, CurrentJob, Id, PocketMoney) = (name, defaultOutfit, currentJob, id, pocketMoney);
 		Gender = ResourceLibrary.GetAll<Gender>().FirstOrDefault( g => g.ResourceId == genderId );
 		if (Gender == null )
 		{

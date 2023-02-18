@@ -6,7 +6,7 @@
 <root>
     <p>Shrekturday</p>
     <div class="hr"/>
-	<p>@(Player.PocketMoney.ToString("C2"))</p>
+	<p>@(Player.Data.PocketMoney.ToString("C2"))</p>
 </root>
 
 @code{
@@ -18,6 +18,6 @@
 
     protected override int BuildHash()
     {
-        return Player.PocketMoney.GetHashCode();
+        return Player.Data.PocketMoney.GetHashCode();
     }
 }

@@ -1,10 +1,12 @@
 ﻿using IdahoRP.Api;
 using IdahoRP.Bots;
+using IdahoRP.Entities;
 using IdahoRP.Mechanics;
 using IdahoRP.UI;
 using Sandbox;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace IdahoRP;
 
@@ -16,6 +18,8 @@ public partial class Idahoid : AnimatedEntity
 {
 	[BindComponent] public PlayerController Controller { get; }
 
+	[Net] public CitizenData Data { get; set; }
+
 	public Idahoid()
 	{
 		InitializeStats();
@@ -23,24 +27,24 @@ public partial class Idahoid : AnimatedEntity
 
 	public Idahoid(IClient cl) : this()
 	{
-		var citizenData = CitizenData.GetData( cl.SteamId );
+		Data = CitizenData.GetData( cl.SteamId );
 		if ( cl.IsBot )
 		{
-			Log.Trace( $"Configuring pawn for citizen bot named: {citizenData.Name}" );
+			Log.Trace( $"Configuring pawn for citizen bot named: {Data.Name}" );
 		}
 		else
 		{
 			string avatarData = cl.GetClientData( "avatar" );
 			Log.Trace( $"{cl} - Loaded avatar data: {avatarData}" );
-			citizenData.DefaultOutfit.Deserialize( avatarData );
+			Data.DefaultOutfit.Deserialize( avatarData );
 		}
-		RpName = citizenData.Name;
-		Gender = citizenData.Gender;
-		DefaultOutfit = citizenData.DefaultOutfit;
-		CurrentJob = citizenData.CurrentJob;
+		RpName = Data.Name;
+		Gender = Data.Gender;
+		DefaultOutfit = Data.DefaultOutfit;
+		CurrentJob = Data.CurrentJob;
 		CreateInfoPanel();
 		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
-		ClientOutfit = citizenData.DefaultOutfit;
+		ClientOutfit = Data.DefaultOutfit;
 		DefaultOutfit.DressEntity( this );
 		var spPlayer = Gender.SubjectPronoun.ToCapitalized();
 		var svSmell = Gender.GetSubjectVerb( "smells", "smell" );
@@ -169,24 +173,26 @@ public partial class Idahoid : AnimatedEntity
 	private TimeUntil _canLeftClick;
 	private TimeUntil _canRightClick;
 
-	const string MODEL_WATERMELON = "models/sbox_props/watermelon/watermelon.vmdl_c";
 	const string MODEL_CITIZEN = "models/citizen/citizen.vmdl";
 
 	private void ExecuteMagicTest()
 	{
 		if ( Game.IsServer )
 		{
-			if ( Input.Pressed( InputButton.PrimaryAttack ) && _canLeftClick && TrySpendMagic(5.0f) )
+			if ( Input.Pressed( InputButton.PrimaryAttack ) && _canLeftClick && TrySpendMagic(25.0f) )
 			{
-				LaunchModel( MODEL_WATERMELON );
+				// Melon value should increase gradually over time.
+				float melonValue = 1f * (Time.Now / 1000);
+				// Each melon is worth at least five cents.
+				melonValue = MathF.Max( 0.05f, melonValue );
+				LaunchMoneyMelon( melonValue );
 				_canLeftClick = 1.0f;
 			}
-			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(5.0f) )
+			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(50.0f) )
 			{
 				Reproduce();
 				_canRightClick = 1.0f;
 			}
-			
 		}
 
 		bool TrySpendMagic(float amount )
@@ -202,10 +208,22 @@ public partial class Idahoid : AnimatedEntity
 		{
 			var model = new ModelEntity();
 			model.SetModel( modelPath );
-			model.Position = EyePosition + EyeRotation.Forward * 40;
-			model.Rotation = Rotation.LookAt( Vector3.Random.Normal );
 			model.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
-			model.PhysicsGroup.Velocity = EyeRotation.Forward * 1000;
+			LaunchEntity( model );
+		}
+
+		void LaunchMoneyMelon(float melonValue )
+		{
+			var melon = new MoneyMelon();
+			melon.BaseValue = melonValue;
+			LaunchEntity( melon );
+		}
+
+		void LaunchEntity(ModelEntity entity)
+		{
+			entity.Position = EyePosition + EyeRotation.Forward * 40;
+			entity.Rotation = Rotation.LookAt( Vector3.Random.Normal );
+			entity.PhysicsGroup.Velocity = EyeRotation.Forward * 1000;
 		}
 
 		void Reproduce()

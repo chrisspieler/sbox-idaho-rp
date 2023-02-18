@@ -8,7 +8,6 @@ public partial class Idahoid
 	[Net] public string RpName { get; set; }
 	[Net] public Gender Gender { get; set; }
 	public ClothingContainer DefaultOutfit { get; set; }
-	[Net] public float PocketMoney { get; set; } = 0.00f;
 	[Net] public Job CurrentJob { get; set; }
 	public ClothingContainer ClientOutfit { get; set; } = new ClothingContainer();
 	[Net] private float _maxHealth { get; set; } = 100f;
@@ -21,6 +20,6 @@ public partial class Idahoid
 
 	public void GiveCash(float amount )
 	{
-		PocketMoney += amount;
+		Data.PocketMoney += amount;
 	}
 }

@@ -116,6 +116,6 @@ public static class Commands
 	{
 		var client = ClientByName( name );
 		((Idahoid)client.Pawn).GiveCash( amount );
-		Log.Info( $"{ConsoleSystem.Caller.Client} - Gave {amount.ToString( "C2" )} to {client}" );
+		Log.Info( $"{ConsoleSystem.Caller?.Client} - Gave {amount.ToString( "C2" )} to {client}" );
 	}
 }

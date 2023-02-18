@@ -45,7 +45,7 @@ namespace IdahoRP.Repositories.FileStorage
 		public T Get( K id )
 		{
 			string recordPath = GetRecordPath( id );
-			return FileSystem.Data.ReadJsonOrDefault<T>( recordPath, default );
+			return FileSystem.Data.ReadJson<T>( recordPath, default );
 		}
 
 		public IEnumerable<T> GetAll()

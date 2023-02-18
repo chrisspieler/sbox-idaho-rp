@@ -14,10 +14,9 @@ namespace IdahoRP.Api;
 public interface IRepository<T,K> where T : IDbRecord<K>
 {
 	/// <summary>
-	/// Returns the record with the specified <paramref name="Id"/>, or <c>null</c>
-	/// if no such record exists.
+	/// Returns the record with the specified <paramref name="Id"/>.
 	/// </summary>
-	/// <param name="Id">The <c>Id</c> of the record that may be returned.</param>
+	/// <param name="Id">The <c>Id</c> of the record that shall be returned.</param>
 	T Get( K Id );
 	/// <summary>
 	/// Returns all records of type <typeparamref name="T"/>.
