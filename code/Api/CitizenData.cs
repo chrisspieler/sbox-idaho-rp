@@ -1,12 +1,8 @@
-﻿using IdahoRP.Api;
-using IdahoRP.Repositories.FileStorage;
-using Sandbox;
-using System;
-using System.Collections.Generic;
+﻿using Sandbox;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace IdahoRP;
+namespace IdahoRP.Api;
 
 public partial class CitizenData : BaseNetworkable, IDbRecord<long>, INetworkSerializer
 {
@@ -84,7 +80,7 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>, INetworkSer
 		Log.Info( $"Printing data for {citizenDb.Count} citizens." );
 		foreach(var citizen in citizenDb.GetAll() )
 		{
-			Log.Info( $"SteamID: {citizen.Id}, Name: \"{citizen.Name}\", Gender: \"{citizen.Gender.Name}\", Job: \"{citizen.CurrentJob?.Title}\"" );
+			Log.Info( $"SteamID: {citizen.Id}, Name: \"{citizen.Name}\", Gender: \"{citizen.Gender.Name}\", Job: \"{citizen.CurrentJob?.Title}\", Pocket Change: {citizen.PocketMoney.ToString("C2")}" );
 		}
 	}
 
