@@ -8,7 +8,7 @@ public partial class Idahoid : AnimatedEntity
 	/// The entity we are currently hovering. The distance to this entity is
 	/// stored in <see cref="HoveredDistance"/>
 	/// </summary>
-	public Entity HoveredEntity { get; private set; }
+	[Net] public Entity HoveredEntity { get; private set; }
 	public float HoveredDistance { get; private set; }
 
 	protected virtual Entity FindHovered( out float distance )
@@ -16,8 +16,6 @@ public partial class Idahoid : AnimatedEntity
 		distance = 0;
 		var tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 5000 )
 			.Ignore( this )
-			.WithAnyTags( CollisionTags.Solid )
-			.WithAnyTags( CollisionTags.Interactable )
 			.Run();
 
 		if ( !tr.Entity.IsValid() )

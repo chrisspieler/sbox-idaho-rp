@@ -163,6 +163,7 @@ public partial class Idahoid : AnimatedEntity
 		TickStatChanges();
 		ExecuteMagicTest();
 		SimulateAnimation();
+		SimulateHover();
 	}
 
 	private TimeUntil _canLeftClick;

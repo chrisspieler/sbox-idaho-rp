@@ -1,0 +1,48 @@
+﻿@using Sandbox;
+@using System.Collections.Generic;
+
+@inherits Sandbox.UI.Panel
+@namespace IdahoRP.UI
+
+<root>
+    <p>@InteractString</p>
+</root>
+
+@code {
+    public string InteractString { get; set; }
+    private Dictionary<string, string> _interactStrings = new()
+    {
+        { "player", "Smooch" },
+        { "mirror", "Flex" },
+        { "door", "Open/Close" }
+    };
+
+    public override void Tick()
+    {
+        var pawn = Game.LocalPawn as Idahoid;
+        if (pawn == null)
+        {
+            InteractString = string.Empty;
+            return;
+        }
+
+        if (pawn.HoveredEntity != null)
+        {
+            bool appliedTag = false;
+            foreach(KeyValuePair<string, string> kvp in _interactStrings)
+            {
+                if (pawn.HoveredEntity.Tags.Has(kvp.Key))
+                {
+                    InteractString = kvp.Value;
+                    appliedTag = true;
+                    break;
+                }
+            }
+            // There's nothing worth interacting with that we've hovered over.
+            if (!appliedTag)
+            {
+                InteractString = string.Empty;
+            }
+        }
+    }
+}
