@@ -5,16 +5,25 @@
 @namespace IdahoRP.UI
 
 <root>
+    <div class="icon">@InteractIcon</div>
     <p>@InteractString</p>
 </root>
 
 @code {
     public string InteractString { get; set; }
+    public string InteractIcon { get; set; }
     private Dictionary<string, string> _interactStrings = new()
     {
         { "player", "Smooch" },
         { "mirror", "Flex" },
         { "door", "Open/Close" }
+    };
+
+    private Dictionary<string, string> _interactIcons = new()
+    {
+        { "player", "volunteer_activism" },
+        { "mirror", "emoji_people" },
+        { "door", "door_open" }
     };
 
     public override void Tick()
@@ -23,17 +32,24 @@
         if (pawn == null)
         {
             InteractString = string.Empty;
+            InteractIcon = string.Empty;
             return;
         }
 
-        if (pawn.HoveredEntity != null)
+        if (pawn.HoveredEntity == null)
+        {
+            InteractString = string.Empty;
+            InteractIcon = string.Empty;
+        }
+        else
         {
             bool appliedTag = false;
-            foreach(KeyValuePair<string, string> kvp in _interactStrings)
+            foreach(string tag in _interactStrings.Keys)
             {
-                if (pawn.HoveredEntity.Tags.Has(kvp.Key))
+                if (pawn.HoveredEntity.Tags.Has(tag))
                 {
-                    InteractString = kvp.Value;
+                    InteractString = _interactStrings[tag];
+                    InteractIcon = _interactIcons[tag];
                     appliedTag = true;
                     break;
                 }
@@ -42,7 +58,13 @@
             if (!appliedTag)
             {
                 InteractString = string.Empty;
+                InteractIcon = string.Empty;
             }
         }
+    }
+
+    protected override int BuildHash()
+    {
+        return InteractString?.GetHashCode() ?? 0;
     }
 }

@@ -118,8 +118,21 @@ Crosshair {
 
 HoverPanel {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 51.5%;
+    left: 40%;
+    width: 20%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        font-size: 26px;
+        margin-left: 12px;
+    }
+
+    .icon {
+        font-size: 40px;
+    }
 }
 
 h1{
