@@ -30,7 +30,7 @@ public class ChangeChecker<T>
 		int hashCode = 0;
 		foreach(var property in _watchedProperties )
 		{
-			HashCode.Combine( hashCode, property.GetHashCode() );
+			hashCode = HashCode.Combine( hashCode, property.GetValue(instance)?.GetHashCode() );
 		}
 		bool hasChanged;
 		if (!_lastHashCode.ContainsKey(instance))
