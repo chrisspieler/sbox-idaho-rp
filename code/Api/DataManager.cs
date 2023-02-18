@@ -13,7 +13,7 @@ public static class DataManager
 	[Event.Entity.PostSpawn]
 	private static void Initialize()
 	{
-		CitizenDb = new FileRepository<CitizenData, long>().ToCached();
+		CitizenDb = new FileRepository<CitizenData, long>().ToCached(true);
 	}
 	[Event.Tick.Server]
 	public static void Tick()

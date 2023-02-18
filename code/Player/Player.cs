@@ -38,17 +38,12 @@ public partial class Idahoid : AnimatedEntity
 			Log.Trace( $"{cl} - Loaded avatar data: {avatarData}" );
 			Data.DefaultOutfit.Deserialize( avatarData );
 		}
-		RpName = Data.Name;
-		Gender = Data.Gender;
-		DefaultOutfit = Data.DefaultOutfit;
 		CurrentJob = Data.CurrentJob;
 		CreateInfoPanel();
-		// Store the avatar/generated outfit for later, in case the outfit changes due to a job.
-		ClientOutfit = Data.DefaultOutfit;
-		DefaultOutfit.DressEntity( this );
-		var spPlayer = Gender.SubjectPronoun.ToCapitalized();
-		var svSmell = Gender.GetSubjectVerb( "smells", "smell" );
-		Log.Info( $"Say hello to {RpName}! {spPlayer} {svSmell} nice!" );
+		Data.DefaultOutfit.DressEntity( this );
+		var spPlayer = Data.Gender.SubjectPronoun.ToCapitalized();
+		var svSmell = Data.Gender.GetSubjectVerb( "smells", "smell" );
+		Log.Info( $"Say hello to {Data.Name}! {spPlayer} {svSmell} nice!" );
 		if ( !Game.IsClient )
 		{
 			JobManager.SetJob( "job_neet", this );
@@ -74,7 +69,7 @@ public partial class Idahoid : AnimatedEntity
 	[ClientRpc]
 	public void CreateInfoPanel()
 	{
-		Log.Trace( $"Creating info panel for {RpName}" );
+		Log.Trace( $"Creating info panel for {Data.Name}" );
 		var worldInfoPanel = new WorldPlayerInfo()
 		{
 			Player = this
@@ -108,7 +103,7 @@ public partial class Idahoid : AnimatedEntity
 
 		ResetInterpolation();
 
-		ClientOutfit.DressEntity( this );
+		Data.DefaultOutfit.DressEntity( this );
 
 		Vector3 GetRandomSpawnPoint()
 		{

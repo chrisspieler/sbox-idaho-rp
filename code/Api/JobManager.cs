@@ -55,6 +55,16 @@ public static partial class JobManager
 			return job.DefaultWorkerMax;
 	}
 
+	public static Job GetJobInfo(string jobName )
+	{
+		if (jobName == null )
+			return null;
+		var adjustedName = jobName.ToLower();
+		if ( !_jobs.ContainsKey( adjustedName ) )
+			return null;
+		return _jobs[adjustedName];
+	}
+
 	public static bool IsMaxCapacity( Job job )
 	{
 		var capacity = GetJobCapacity( job );

@@ -8,13 +8,13 @@ using System.Text.Json.Serialization;
 
 namespace IdahoRP;
 
-public partial class CitizenData : BaseNetworkable, IDbRecord<long>
+public partial class CitizenData : BaseNetworkable, IDbRecord<long>, INetworkSerializer
 {
 	[JsonRequired]
-	[Net, Watch] public string Name { get; set; }
+	[Watch] public string Name { get; set; }
 	[JsonRequired]
 	[Watch] public ClothingContainer DefaultOutfit { get; set; }
-	[Net, Watch] public Job CurrentJob { get; set; }
+	[Watch] public Job CurrentJob { get; set; }
 	[JsonIgnore]
 	[Watch] public Gender Gender 
 	{
@@ -28,11 +28,12 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 	private Gender _gender;
 	[JsonRequired]
 	public int GenderId { get; set; }
-	[Watch, Net] public float PocketMoney { get; set; }
+	[Watch] public float PocketMoney { get; set; }
 
 	public CitizenData()
 	{
-
+		Log.Info( "Creating entirely new CitizenData for some reason." );
+		WriteNetworkData();
 	}
 
 	[JsonConstructor]
@@ -46,6 +47,7 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 		{
 			Log.Error( $"No gender found for gender ID: {genderId}" );
 		}
+		WriteNetworkData();
 	}
 
 	// IDbRecord
@@ -127,5 +129,23 @@ public partial class CitizenData : BaseNetworkable, IDbRecord<long>
 		{
 			_genderPicker.AddItem( gender, 100 / gender.RarityFactor );
 		}
+	}
+
+	public void Read( ref NetRead read )
+	{
+		Name = read.ReadString();
+		DefaultOutfit = read.ReadClass<ClothingContainer>();
+		CurrentJob = JobManager.GetJobInfo( read.ReadString() );
+		Gender = ResourceLibrary.Get<Gender>( read.Read<int>() );
+		PocketMoney = read.Read<float>();
+	}
+
+	public void Write( NetWrite write )
+	{
+		write.WriteUtf8( Name );
+		write.Write( DefaultOutfit );
+		write.WriteUtf8( CurrentJob?.InternalName );
+		write.Write( GenderId );
+		write.Write( PocketMoney );
 	}
 }

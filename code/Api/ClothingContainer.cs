@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Sandbox;
@@ -8,9 +9,8 @@ namespace IdahoRP;
 /// <summary>
 /// Holds a collection of clothing items. Won't let you add items that aren't compatible.
 /// </summary>
-public partial class ClothingContainer
+public partial class ClothingContainer : INetworkSerializer
 {
-
 	public List<Clothing> Clothing { get; set; } = new();
 
 	/// <summary>
@@ -226,4 +226,21 @@ public partial class ClothingContainer
 
 		return created;
 	}
+
+	public void Write( NetWrite write )
+	{
+		write.Write( Clothing.Select( c => c.ResourceId ).ToArray() );
+	}
+
+	public void Read( ref NetRead read )
+	{
+		int[] clothingIds = Array.Empty<int>();
+		read.ReadArray(clothingIds);
+		for ( int i = 0; i < clothingIds.Length; i++ )
+		{
+			Clothing.Add( ResourceLibrary.Get<Clothing>( clothingIds[i] ) );
+		}
+	}
+
+
 }

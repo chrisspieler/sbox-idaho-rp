@@ -7,14 +7,15 @@ namespace IdahoRP.Api;
 
 public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
 {
-	public RepositoryCache(IRepository<T,K> dataSource)
+	public RepositoryCache(IRepository<T,K> dataSource, bool updateNetwork = false)
 	{
 		_dataSource = dataSource;
+		_changeChecker = new ChangeChecker<T>( updateNetwork );
 	}
 
 	private IRepository<T,K> _dataSource;
 	private Dictionary<K, T> _cache = new();
-	private ChangeChecker<T> _changeChecker = new ChangeChecker<T>();
+	private ChangeChecker<T> _changeChecker;
 
 	public void Tick()
 	{
