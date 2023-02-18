@@ -179,7 +179,7 @@ public partial class Idahoid : AnimatedEntity
 	{
 		if ( Game.IsServer )
 		{
-			if ( Input.Pressed( InputButton.PrimaryAttack ) && _canLeftClick && TrySpendMagic(25.0f) )
+			if ( Input.Pressed( InputButton.PrimaryAttack ) && _canLeftClick && TrySpendStat( PlayerStat.Magic, 25.0f ) )
 			{
 				// Melon value should increase gradually over time.
 				float melonValue = 1f * (Time.Now / 1000);
@@ -188,20 +188,11 @@ public partial class Idahoid : AnimatedEntity
 				LaunchMoneyMelon( melonValue );
 				_canLeftClick = 1.0f;
 			}
-			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendMagic(50.0f) )
+			if ( Input.Pressed( InputButton.SecondaryAttack ) && _canRightClick && TrySpendStat( PlayerStat.Magic, 50.0f ) )
 			{
 				Reproduce();
 				_canRightClick = 1.0f;
 			}
-		}
-
-		bool TrySpendMagic(float amount )
-		{
-			var currentMagic = GetStat( PlayerStat.Magic );
-			if ( currentMagic < amount )
-				return false;
-			OffsetStat( PlayerStat.Magic, -amount );
-			return true;
 		}
 
 		void LaunchModel(string modelPath )

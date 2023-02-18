@@ -1,0 +1,25 @@
+{
+  "publish": {
+    "Enabled": true,
+    "ProjectConfig": {
+      "Title": "Nice Rooster!",
+      "Type": "sound",
+      "Org": "duccsoft",
+      "Ident": "vox_nice_rooster",
+      "Tags": null,
+      "Schema": 0,
+      "HasAssets": false,
+      "AssetsPath": null,
+      "ResourcePaths": null,
+      "HasCode": false,
+      "CodePath": null,
+      "Metadata": {
+        "SingleAssetSource": "sounds/vox_nice_rooster.sound",
+        "Summary": "A verbal expression of admiration that is applicable to many situations.",
+        "Description": "",
+        "Public": true,
+        "ReplaceTags": "nice rooster praise vox voice english american"
+      }
+    }
+  }
+}

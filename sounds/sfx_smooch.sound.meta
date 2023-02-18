@@ -1,0 +1,25 @@
+{
+  "publish": {
+    "Enabled": true,
+    "ProjectConfig": {
+      "Title": "Smooch",
+      "Type": "sound",
+      "Org": "duccsoft",
+      "Ident": "sfx_smooch",
+      "Tags": "smooch kiss wet",
+      "Schema": 0,
+      "HasAssets": false,
+      "AssetsPath": null,
+      "ResourcePaths": null,
+      "HasCode": false,
+      "CodePath": null,
+      "Metadata": {
+        "SingleAssetSource": "sounds/sfx_smooch.sound",
+        "Summary": "A quick smooch \u003C3",
+        "Description": "",
+        "Public": true,
+        "ReplaceTags": "smooch kiss wet love"
+      }
+    }
+  }
+}

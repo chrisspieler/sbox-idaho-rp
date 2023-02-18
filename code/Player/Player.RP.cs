@@ -18,6 +18,15 @@ public partial class Idahoid
 	[Net] private float _maxStamina { get; set; } = 60f;
 	[Net] private float _staminaRegenRate { get; set; } = 10f;
 
+	bool TrySpendStat(PlayerStat stat, float amount )
+	{
+		var currentValue = GetStat( stat );
+		if ( currentValue < amount )
+			return false;
+		OffsetStat( stat, -amount );
+		return true;
+	}
+
 	public void GiveCash(float amount )
 	{
 		Data.PocketMoney += amount;

@@ -2,7 +2,7 @@
 
 namespace IdahoRP;
 
-public partial class Idahoid : AnimatedEntity
+public partial class Idahoid : AnimatedEntity, IUse
 {
 	/// <summary>
 	/// The entity we are currently hovering. The distance to this entity is
@@ -199,6 +199,22 @@ public partial class Idahoid : AnimatedEntity
 	public bool CanContinueUsing( Entity entity )
 	{
 		return entity == FindUseEntity();
+	}
+
+	public bool OnUse( Entity user )
+	{
+		if (TrySpendStat(PlayerStat.Stamina, 10f ) )
+		{
+			Sound.FromWorld( "sfx_smooch", Position + Vector3.Zero.WithZ( 72f ) );
+			float healthPercent = GetStat( PlayerStat.Health ) / GetStat( PlayerStat.MaxHealth );
+			GiveCash( 0.10f * healthPercent );
+		}
+		return false;
+	}
+
+	public bool IsUsable( Entity user )
+	{
+		return true;
 	}
 
 	[ConVar.Replicated] public static float sv_player_use_distance { get; set; } = 60;

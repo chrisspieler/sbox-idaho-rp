@@ -10,7 +10,7 @@ using static Sandbox.Event;
 
 namespace IdahoRP;
 
-public static class Commands
+public static partial class Commands
 {
 	private static IClient ClientByName(string name )
 	{
