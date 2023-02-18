@@ -203,11 +203,14 @@ public partial class Idahoid : AnimatedEntity, IUse
 
 	public bool OnUse( Entity user )
 	{
-		if (TrySpendStat(PlayerStat.Stamina, 10f ) )
+		var player = user as Idahoid;
+		if ( player == null )
+			return false;
+		if (player.TrySpendStat(PlayerStat.Stamina, 10f ) )
 		{
 			Sound.FromWorld( "sfx_smooch", Position + Vector3.Zero.WithZ( 72f ) );
-			float healthPercent = GetStat( PlayerStat.Health ) / GetStat( PlayerStat.MaxHealth );
-			GiveCash( 0.10f * healthPercent );
+			float healthPercent = player.GetStat( PlayerStat.Health ) / player.GetStat( PlayerStat.MaxHealth );
+			player.GiveCash( 0.10f * healthPercent );
 		}
 		return false;
 	}
