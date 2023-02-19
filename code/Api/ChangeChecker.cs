@@ -10,14 +10,12 @@ namespace IdahoRP.Api;
 
 public class ChangeChecker<T>
 {
-	public bool WriteNetworkDataOnChange { get; set; } = false;
 
 	private Dictionary<T, int> _lastHashCode = new();
 	private List<PropertyDescription> _watchedProperties;
 
-	public ChangeChecker( bool updateNetwork = false)
+	public ChangeChecker()
 	{
-		WriteNetworkDataOnChange = updateNetwork;
 		var targetType = TypeLibrary.GetType<T>();
 		_watchedProperties = targetType
 			.Properties
@@ -41,8 +39,6 @@ public class ChangeChecker<T>
 		}
 		hasChanged = _lastHashCode[instance] != hashCode;
 		_lastHashCode[instance] = hashCode;
-		if ( hasChanged && WriteNetworkDataOnChange)
-			(instance as BaseNetworkable).WriteNetworkData();
 		return hasChanged;
 	}
 }

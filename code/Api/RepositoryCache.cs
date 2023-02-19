@@ -7,15 +7,17 @@ namespace IdahoRP.Api;
 
 public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbRecord<K>
 {
-	public RepositoryCache(IRepository<T,K> dataSource, bool updateNetwork = false)
+	public RepositoryCache(IRepository<T,K> dataSource)
 	{
 		_dataSource = dataSource;
-		_changeChecker = new ChangeChecker<T>( updateNetwork );
+		_changeChecker = new ChangeChecker<T>();
 	}
 
 	private IRepository<T,K> _dataSource;
 	private Dictionary<K, T> _cache = new();
 	private ChangeChecker<T> _changeChecker;
+
+	public event EventHandler<T> OnCacheItemInvalid;
 
 	public void Tick()
 	{
@@ -31,6 +33,7 @@ public partial class RepositoryCache<T, K> : IRepository<T, K> where T : IDbReco
 			if ( _changeChecker.HasChanged( item ) )
 			{
 				item.IsDirty = true;
+				OnCacheItemInvalid?.Invoke(this, item);
 			}
 		}
 	}
