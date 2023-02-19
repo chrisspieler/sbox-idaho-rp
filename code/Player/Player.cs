@@ -127,6 +127,13 @@ public partial class Idahoid : AnimatedEntity
 		Components.Create<InteractionMechanic>();
 	}
 
+	[ClockEvent.MinuteElapsed]
+	public void MinuteTick(int hour, int minute)
+	{
+		if (!Client.IsBot)
+			UpdateTime( hour, minute );
+	}
+
 	[ConCmd.Admin( "sethealth" )]
 	public static void SetHealth( float value ) => ConsoleSetStat( PlayerStat.Health, value );
 

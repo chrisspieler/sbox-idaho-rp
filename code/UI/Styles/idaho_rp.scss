@@ -98,10 +98,30 @@ MoneyPanel {
     margin: 5px;
     padding: 10px;
     color: white;
-    font-size: 24px;
 
-    * {
-        margin: 2px;
+
+    #clock {
+        align-items: center;
+        font-weight: lighter;
+
+        .icon {
+            font-size: 36px;
+            margin: 5px;
+            color: color(1,1,1,0.8);
+        }
+
+        p {
+            font-size: 36px;
+        }
+    }
+
+    .hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    #moneyText {
+        font-size: 30px;
     }
 }
 

@@ -1,23 +1,33 @@
-﻿@using Sandbox;
+﻿@using System;
+@using Sandbox;
+@using IdahoRP.Api;
 
 @inherits Sandbox.UI.Panel
 @namespace IdahoRP.UI
 
 <root>
-    <p>Shrekturday</p>
+    <div id="clock">
+        <div class="icon">schedule</div>
+        <p>@(CurrentHour.ToString("D2")):@(CurrentMinute.ToString("D2"))</p>
+    </div>
+
     <div class="hr"/>
-	<p>@(Player.Data.PocketMoney.ToString("C2"))</p>
+	<p id="moneyText">@(Player.Data.PocketMoney.ToString("C2"))</p>
 </root>
 
 @code{
     public MoneyPanel()
     {
         Player = (Idahoid)Game.LocalPawn;
+        CurrentHour = ClockManager.CurrentTime.Hour;
+        CurrentMinute = ClockManager.CurrentTime.Minute;
     }
     public Idahoid Player { get; set; }
+    public int CurrentHour { get; set; }
+    public int CurrentMinute { get; set; }
 
     protected override int BuildHash()
     {
-        return Player.Data.PocketMoney.GetHashCode();
+        return HashCode.Combine(Player.Data.PocketMoney, CurrentHour, CurrentMinute);
     }
 }

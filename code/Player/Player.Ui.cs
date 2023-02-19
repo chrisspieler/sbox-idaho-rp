@@ -19,6 +19,13 @@ public partial class Idahoid
 		_uiHudPage = new Hud();
 	}
 
+	[ClientRpc]
+	public void UpdateTime(int hour, int minute )
+	{
+		_uiHudPage.MoneyPanel.CurrentHour = hour;
+		_uiHudPage.MoneyPanel.CurrentMinute = minute;
+	}
+
 	[ClientRpc] 
 	public void ShowModalMessage(string message ) 
 		=> Log.Info( $"Modal message: {message}" );
