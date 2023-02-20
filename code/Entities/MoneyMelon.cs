@@ -31,7 +31,7 @@ namespace IdahoRP.Entities
 
 		public bool OnUse( Entity user )
 		{
-			Commands.GiveMoney( user.Client.Name, BaseValue );
+			((Idahoid)user).GiveCash( BaseValue, "Money Melon" );
 			Delete();
 			return false;
 		}

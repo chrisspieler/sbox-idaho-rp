@@ -94,34 +94,74 @@ Hud {
 
 MoneyPanel {
     flex-direction: column;
-    align-items: center;
-    margin: 5px;
-    padding: 10px;
-    color: white;
 
 
-    #clock {
+    #mainMoneyPanel {
+        flex-direction: column;
         align-items: center;
-        font-weight: lighter;
+        width: 400px;
+        margin: 5px;
+        padding: 10px;
+        color: white;
 
-        .icon {
-            font-size: 36px;
-            margin: 5px;
-            color: color(1,1,1,0.8);
+        #clock {
+            align-items: center;
+            font-weight: lighter;
+
+            .icon {
+                font-size: 36px;
+                margin: 5px;
+                color: color(1,1,1,0.8);
+            }
+
+            p {
+                font-size: 36px;
+            }
         }
 
-        p {
-            font-size: 36px;
+        .hr {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        #moneyText {
+            font-size: 28px;
         }
     }
 
-    .hr {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
+    .line-item-container {
+        flex-direction: column;
+        height: 200px;
+        font-size: 36px;
 
-    #moneyText {
-        font-size: 30px;
+        FloatingLineItem {
+            justify-content: space-around;
+            transition: all 0.1s ease-in;
+            opacity: 1;
+            transform: translateY(0px);
+
+            &:intro {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+
+            &:outro {
+                opacity: 0;
+            }
+
+            p {
+                text-stroke: 2px color(1,1,1,0.6);
+                text-shadow: 3px 2px 1px 1px black;
+            }
+
+            &.positive p {
+                color: forestgreen;
+            }
+
+            &.negative p {
+                color: indianred;
+            }
+        }
     }
 }
 

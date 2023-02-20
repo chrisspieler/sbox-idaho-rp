@@ -26,6 +26,12 @@ public partial class Idahoid
 		_uiHudPage.MoneyPanel.CurrentMinute = minute;
 	}
 
+	[ClientRpc]
+	public void ShowLineItem( float amount, string description)
+	{
+		_uiHudPage.MoneyPanel.ShowLineItem( amount, description );
+	}
+
 	[ClientRpc] 
 	public void ShowModalMessage(string message ) 
 		=> Log.Info( $"Modal message: {message}" );

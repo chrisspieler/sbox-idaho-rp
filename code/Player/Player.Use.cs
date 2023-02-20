@@ -210,7 +210,7 @@ public partial class Idahoid : AnimatedEntity, IUse
 		{
 			Sound.FromWorld( "sfx_smooch", Position + Vector3.Zero.WithZ( 72f ) );
 			float healthPercent = player.GetStat( PlayerStat.Health ) / player.GetStat( PlayerStat.MaxHealth );
-			player.GiveCash( 0.10f * healthPercent );
+			player.GiveCash( 0.10f * healthPercent, "Nice Kiss!" );
 		}
 		return false;
 	}

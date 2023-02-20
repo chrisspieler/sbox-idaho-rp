@@ -1,18 +1,23 @@
 ﻿@using System;
 @using Sandbox;
+@using Sandbox.UI;
 @using IdahoRP.Api;
 
 @inherits Sandbox.UI.Panel
 @namespace IdahoRP.UI
 
 <root>
-    <div id="clock">
-        <div class="icon">schedule</div>
-        <p>@(CurrentHour.ToString("D2")):@(CurrentMinute.ToString("D2"))</p>
+    <div id="mainMoneyPanel" class="panel">
+        <div id="clock">
+            <div class="icon">schedule</div>
+            <p>@(CurrentHour.ToString("D2")):@(CurrentMinute.ToString("D2"))</p>
+        </div>
+        <div class="hr"/>
+	    <p id="moneyText">@(Player.Data.PocketMoney.ToString("C2"))</p>
     </div>
 
-    <div class="hr"/>
-	<p id="moneyText">@(Player.Data.PocketMoney.ToString("C2"))</p>
+    <div @ref=PositiveLineItems id="positiveLineItems" class="line-item-container" />
+    <div @ref=NegativeLineItems id ="negativeLineItem" class="line-item-container" />
 </root>
 
 @code{
@@ -25,9 +30,18 @@
     public Idahoid Player { get; set; }
     public int CurrentHour { get; set; }
     public int CurrentMinute { get; set; }
+    public Panel PositiveLineItems { get; set; }
+    public Panel NegativeLineItems { get; set; }
 
     protected override int BuildHash()
     {
         return HashCode.Combine(Player.Data.PocketMoney, CurrentHour, CurrentMinute);
+    }
+
+    public void ShowLineItem(float amount, string description)
+    {
+        Panel container = amount >= 0.0f ? PositiveLineItems : NegativeLineItems;
+        var lineItem = new FloatingLineItem(amount, description);
+        container.AddChild(lineItem);
     }
 }

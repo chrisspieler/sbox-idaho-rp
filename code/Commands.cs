@@ -112,10 +112,10 @@ public static partial class Commands
 	}
 
 	[ConCmd.Server( "givemoney" )]
-	public static void GiveMoney(string name, float amount )
+	public static void GiveMoney(string name, float amount, string description = "Console Command" )
 	{
 		var client = ClientByName( name );
-		((Idahoid)client.Pawn).GiveCash( amount );
+		((Idahoid)client.Pawn).GiveCash( amount, description );
 		Log.Info( $"{ConsoleSystem.Caller?.Client} - Gave {amount.ToString( "C2" )} to {client}" );
 	}
 }

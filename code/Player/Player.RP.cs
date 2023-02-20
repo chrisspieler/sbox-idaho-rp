@@ -23,8 +23,9 @@ public partial class Idahoid
 		return true;
 	}
 
-	public void GiveCash(float amount )
+	public void GiveCash(float amount, string description )
 	{
 		Data.PocketMoney += amount;
+		ShowLineItem( amount, description );
 	}
 }
