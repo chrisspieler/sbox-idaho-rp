@@ -5,7 +5,7 @@
 @inherits IdahoRP.UI.Modal;
 
 <root>
-    <NamePicker @ref=NamePicker class="thin-border" SelectedName=@Data.Name/>
+    <NamePicker @ref=NamePicker class="thin-border" Data=@Data/>
     <GenderPicker @ref=GenderPicker class="thin-border" SelectedGenderId=@Data.GenderId/>
     <button class="solid" onclick="@(() => ConfirmCharacter())">Confirm Character</button>
 </root>
@@ -17,8 +17,8 @@
 
     public void ConfirmCharacter()
     {
-        Data.Name = NamePicker.SelectedName;
-        Data.Gender = ResourceLibrary.Get<Gender>(GenderPicker.SelectedGenderId);
+        Commands.SetName(Game.SteamId, NamePicker.SelectedName);
+        Commands.SetGender(Game.SteamId, GenderPicker.SelectedGenderId);
         Close();
     }
 }

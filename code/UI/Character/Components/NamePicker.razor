@@ -1,5 +1,6 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
+@using IdahoRP.Api;
 
 @namespace IdahoRP.UI
 @inherits Sandbox.UI.Panel;
@@ -15,21 +16,16 @@
 
 @code {
     public TextEntry NameText { get; set; }
+    public CitizenData Data { get; set; }
+
     public string SelectedName 
-    { 
-        get => _selectedName; 
+    {
+        get => NameText?.Text;
         set
         {
-            _selectedName = value;
             if (NameText != null)
                 NameText.Text = value;
         }
-    }
-    private string _selectedName;
-
-    public NamePicker()
-    {
-
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -37,7 +33,8 @@
         if (!firstTime)
             return;
 
-        NameText.Text = SelectedName;
+        if (Data != null)
+            SelectedName = Data.Name;
     }
 
     public void GenerateRandomName()
