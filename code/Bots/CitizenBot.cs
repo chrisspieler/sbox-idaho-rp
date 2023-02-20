@@ -92,8 +92,6 @@ public partial class CitizenBot : Bot
 	public override void BuildInput()
 	{
 		Input.AnalogMove = InputDirection;
-		// Making an aimbot-style simulation of Input.AnalogLook would be excessively annoying
-		// since we can just access the LookInput of the pawn directly elsewhere.
 		((Entity)Client.Pawn).BuildInput();
 	}
 }

@@ -2,6 +2,7 @@
 using IdahoRP.Bots;
 using IdahoRP.Entities;
 using IdahoRP.Mechanics;
+using IdahoRP.Player.Components;
 using IdahoRP.UI;
 using Sandbox;
 using System;
@@ -63,29 +64,7 @@ public partial class Idahoid : AnimatedEntity
 
 		Tags.Add( "player" );
 
-		CreateSpotlight();
 		CreateComponents();
-	}
-
-	[Net, Predicted] public SpotLightEntity Spotlight { get; set; }
-
-	public void CreateSpotlight()
-	{
-		Spotlight = new SpotLightEntity()
-		{
-			Enabled = false,
-			DynamicShadows = true,
-			Range = 1024f,
-			Falloff = 1.0f,
-			LinearAttenuation = 0.0f,
-			QuadraticAttenuation = 1.0f,
-			Color = Color.White
-		};
-		Spotlight.SetParent( this );
-		Spotlight.LocalPosition = Spotlight
-			.LocalPosition
-			.WithZ( 72f )
-			.WithX( 10f );
 	}
 
 	[ClientRpc]
@@ -98,12 +77,6 @@ public partial class Idahoid : AnimatedEntity
 		};
 		float panelZOffset = Controller.CurrentEyeHeight;
 		WorldPanelTracker.AddWorldPanel( worldInfoPanel, this, Vector3.Up * panelZOffset );
-	}
-
-	[ClientRpc]
-	public void DestroyInfoPanel()
-	{
-
 	}
 
 	public void Respawn(Vector3? position = null)
@@ -137,6 +110,8 @@ public partial class Idahoid : AnimatedEntity
 
 	private void CreateComponents()
 	{
+		_flashlightComponent = Components.Create<Flashlight>();
+
 		Components.Create<PlayerController>();
 
 		Components.RemoveAny<PlayerControllerMechanic>();
@@ -183,19 +158,16 @@ public partial class Idahoid : AnimatedEntity
 		player.SetStat( stat, value );
 	}
 
+	private Flashlight _flashlightComponent;
+
 	public override void Simulate( IClient cl )
 	{
 		Controller?.Simulate( cl );
-
-		if ( Game.IsServer )
-		{
-			Spotlight.Rotation = Rotation.From( AimRay.Forward.EulerAngles );
-		}
-
+		_flashlightComponent?.Simulate();
 
 		TickRegen();
 		TickStatChanges();
-		ExecuteMagicTest();
+		SimulateMagic();
 		SimulateAnimation();
 		SimulateHover();
 	}
@@ -205,7 +177,7 @@ public partial class Idahoid : AnimatedEntity
 
 	const string MODEL_CITIZEN = "models/citizen/citizen.vmdl";
 
-	private void ExecuteMagicTest()
+	private void SimulateMagic()
 	{
 		if ( Game.IsServer )
 		{
