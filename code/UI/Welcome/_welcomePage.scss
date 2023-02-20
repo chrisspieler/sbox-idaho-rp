@@ -1,0 +1,14 @@
+﻿WelcomePage {
+    pointer-events: all;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0px;
+    backdrop-filter: blur( 5px );
+    background-color: color(0,0,0,0.6);
+
+    button {
+        margin: 10px;
+    }
+}

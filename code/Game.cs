@@ -44,7 +44,7 @@ public partial class IdahoGame : BaseGameManager
 		else
 		{
 			var citizen = CitizenData.GetData( cl.SteamId );
-			ShowWelcomePage( To.Single( cl ), citizen.Name, citizen.GenderId );
+			ShowWelcomePage( To.Single( cl ), citizen );
 		}
 	}
 
@@ -76,13 +76,13 @@ public partial class IdahoGame : BaseGameManager
 	}
 
 	[ClientRpc]
-	private void ShowWelcomePage(string name, int genderId) 
+	private void ShowWelcomePage(CitizenData data) 
 	{
 		// I can't use a BaseNetworkable as a parameter to a client RPC, and 
 		// when I tried using a struct, it complained about the string not being
 		// a value type, so using as many parameters as there are data to show the
 		// client will have to do for now.
-		_welcomePage = new WelcomePage(name, genderId);
+		_welcomePage = new WelcomePage(data);
 	}
 
 	[ClientRpc]

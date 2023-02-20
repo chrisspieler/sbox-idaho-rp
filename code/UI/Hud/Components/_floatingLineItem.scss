@@ -1,0 +1,28 @@
+﻿FloatingLineItem {
+    justify-content: space-around;
+    transition: all 0.1s ease-in;
+    opacity: 1;
+    transform: translateY(0px);
+
+    &:intro {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    &:outro {
+        opacity: 0;
+    }
+
+    p {
+        text-stroke: 2px color(1,1,1,0.6);
+        text-shadow: 3px 2px 1px 1px black;
+    }
+
+    &.positive p {
+        color: forestgreen;
+    }
+
+    &.negative p {
+        color: indianred;
+    }
+}

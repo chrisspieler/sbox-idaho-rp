@@ -1,0 +1,23 @@
+﻿.player-info-panel {
+    height: 120px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: color(0,0,0,0.2);
+    color: white;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#playerName {
+    font-size: 36px;
+}
+
+.small-text {
+    font-size: 18px;
+    font-weight: light;
+}
+
+StatusBar {
+    width: 200px;
+}

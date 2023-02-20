@@ -1,0 +1,21 @@
+﻿NamePicker {
+    flex-direction: column;
+    justify-content: center;
+
+    #nameEntryBottom {
+        padding: 5px;
+
+        .icon {
+            color: white;
+            margin: 2px;
+            justify-content: center;
+        }
+
+        TextEntry {
+            height: 100%;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

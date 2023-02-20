@@ -1,0 +1,24 @@
+﻿@using IdahoRP.Api;
+@using Sandbox;
+
+@namespace IdahoRP.UI
+@inherits IdahoRP.UI.Modal;
+
+<root>
+    <NamePicker @ref=NamePicker class="thin-border" SelectedName=@Data.Name/>
+    <GenderPicker @ref=GenderPicker class="thin-border" SelectedGenderId=@Data.GenderId/>
+    <button class="solid" onclick="@(() => ConfirmCharacter())">Confirm Character</button>
+</root>
+
+@code {
+    public NamePicker NamePicker { get; set; }
+    public GenderPicker GenderPicker { get; set; }
+    public CitizenData Data { get; set; }
+
+    public void ConfirmCharacter()
+    {
+        Data.Name = NamePicker.SelectedName;
+        Data.Gender = ResourceLibrary.Get<Gender>(GenderPicker.SelectedGenderId);
+        Close();
+    }
+}

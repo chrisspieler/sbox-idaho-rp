@@ -1,0 +1,22 @@
+﻿ListBox {
+    flex-direction: column;
+    padding: 5px;
+    overflow: scroll;
+    background-color: color(0,0,0,0.8);
+    border-radius: 6px;
+
+    .list-item {
+        margin: 3px;
+        flex-shrink: 0;
+        padding: 5px;
+        border-radius: 5px;
+
+        &.selected {
+            background-color: color(1,1,1,0.05);
+        }
+
+        &:hover:not(.selected) {
+            background-color: color(1,1,1,0.1);
+        }
+    }
+}

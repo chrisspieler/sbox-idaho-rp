@@ -1,0 +1,41 @@
+﻿@using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
+@using System.Linq;
+@using IdahoRP.Api;
+@using Sandbox.UI;
+
+@namespace IdahoRP.UI
+@inherits Sandbox.UI.RootPanel;
+@attribute [StyleSheet("UI/main.scss")]
+
+<root>
+    <header>
+        <h1 class="title">Welcome to Idaho RP</h1>
+    </header>
+    <ModifyCharacter @ref=ModifyCharacter Data=@Data>
+</root>
+
+@code {
+    public CitizenData Data { get; set; }
+    public ModifyCharacter ModifyCharacter { get; set; }
+
+    public WelcomePage(CitizenData data)
+    {
+        Data = data;
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (!firstTime)
+            return;
+
+        ModifyCharacter.OnClose += (s, e) => JoinGame();
+        ModifyCharacter.Open();
+    }
+
+    public void JoinGame()
+    {
+        ConsoleSystem.Run("joingame");
+    }
+}
