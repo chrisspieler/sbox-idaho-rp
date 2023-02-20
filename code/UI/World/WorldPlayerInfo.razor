@@ -7,12 +7,13 @@
 @attribute [StyleSheet("UI/World/_worldPlayerInfo.scss")]
 
 <root>
-    <div class="player-info-panel">
+    <div class="panel">
         <div id="playerName">@(Player.Data.Name ?? "null")</div>
         <div class="small-text">@(GetGender())</div>
         <div class="small-text">@(Player.CurrentJob?.Title ?? "null")</div>
         <StatusBar GetMaxValue=@GetMaxHealth GetCurrentValue=@GetHealth FillColor=@HealthColor/>
     </div>
+
 </root>
 
 
