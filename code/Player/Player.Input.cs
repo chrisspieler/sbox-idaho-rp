@@ -42,11 +42,24 @@ public partial class Idahoid : AnimatedEntity
 	/// </summary>
 	public override Ray AimRay => new Ray( EyePosition, EyeRotation.Forward );
 
+	[ConCmd.Server("toggleflashlight")]
+	public static void ToggleFlashlight()
+	{
+		var pawn = ConsoleSystem.Caller.Pawn as Idahoid;
+		pawn.Spotlight.Enabled = !pawn.Spotlight.Enabled;
+		// TODO: Add a sound.
+	}
+
 	public override void BuildInput()
 	{
 		MoveInput = Input.AnalogMove;
 
 		LookInput = CalculateLookInput( Input.AnalogLook );
+
+		if ( Input.Pressed( InputButton.Flashlight ) )
+		{
+			ToggleFlashlight();
+		}
 	}
 
 	internal Angles CalculateLookInput(Angles input )

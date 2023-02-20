@@ -63,7 +63,29 @@ public partial class Idahoid : AnimatedEntity
 
 		Tags.Add( "player" );
 
+		CreateSpotlight();
 		CreateComponents();
+	}
+
+	[Net, Predicted] public SpotLightEntity Spotlight { get; set; }
+
+	public void CreateSpotlight()
+	{
+		Spotlight = new SpotLightEntity()
+		{
+			Enabled = false,
+			DynamicShadows = true,
+			Range = 1024f,
+			Falloff = 1.0f,
+			LinearAttenuation = 0.0f,
+			QuadraticAttenuation = 1.0f,
+			Color = Color.White
+		};
+		Spotlight.SetParent( this );
+		Spotlight.LocalPosition = Spotlight
+			.LocalPosition
+			.WithZ( 72f )
+			.WithX( 10f );
 	}
 
 	[ClientRpc]
@@ -164,6 +186,12 @@ public partial class Idahoid : AnimatedEntity
 	public override void Simulate( IClient cl )
 	{
 		Controller?.Simulate( cl );
+
+		if ( Game.IsServer )
+		{
+			Spotlight.Rotation = Rotation.From( AimRay.Forward.EulerAngles );
+		}
+
 
 		TickRegen();
 		TickStatChanges();
