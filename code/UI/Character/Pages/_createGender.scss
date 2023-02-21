@@ -1,0 +1,58 @@
+﻿CreateGender {
+    flex-direction: column;
+
+    h2 {
+        justify-content: center;
+    }
+
+
+
+    #topSection {
+        flex-direction: column;
+        align-items: center;
+
+        #nameSection {
+            align-items: center;
+            padding: 5px;
+
+            & > h3 {
+                margin-right: 5px;
+            }
+
+            & > TextEntry {
+                margin-left: 5px;
+                height: 40px;
+                width: 300px;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        #isPluralSection {
+            flex-direction: column;
+            padding: 5px;
+
+            #isPluralRow {
+                align-items: center;
+
+                & > h3 {
+                    margin-right: 5px;
+                }
+
+                & > Checkbox {
+                    margin-left: 5px;
+                }
+            }
+
+            p {
+                font-weight: lighter;
+                font-style: italic;
+            }
+        }
+    }
+
+    #pronounSection {
+        flex-direction: column;
+        padding: 5px;
+    }
+}

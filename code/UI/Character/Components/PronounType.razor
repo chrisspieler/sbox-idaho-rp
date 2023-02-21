@@ -1,0 +1,30 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace IdahoRP.UI
+@inherits IdahoRP.UI.Modal;
+
+<root>
+    <div id="textEntrySection">
+        <h3>@PronounName</h3>
+        <TextEntry @ref=PronounTextEntry/>
+    </div>
+    <h4>@string.Format(ExampleString, ExamplePronoun(Pronoun))</h4>
+</root>
+
+@code {
+    public Func<string, string> ExamplePronoun { get; set; } = p => p;
+    public string PronounName { get; set; }
+    public string Pronoun 
+    {
+        get => PronounTextEntry.Text;
+        set
+        {
+            PronounTextEntry.Text = value;
+        }
+    }
+    public string ExampleString { get; set; }
+
+    private TextEntry PronounTextEntry { get; set; }
+}

@@ -1,5 +1,28 @@
 ﻿ModifyCharacter {
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    width: 100%;
+
+    #designSection {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+
+        #pickerSection {
+            flex-direction: column;
+            margin-right: 50px;
+
+            NamePicker {
+                margin: 5px;
+            }
+
+            GenderPicker {
+                margin: 5px;
+            }
+        }
+
+        #customSection {
+            margin-left: 50px;
+        }
+    }
 }

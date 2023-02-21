@@ -1,5 +1,8 @@
-﻿@import "Character/Components/_namePicker.scss";
+﻿@import "Base/Sandbox/_checkbox.scss";
 @import "Character/Components/_genderPicker.scss";
+@import "Character/Components/_namePicker.scss";
+@import "Character/Components/_pronounType.scss";
+@import "Character/Pages/_createGender.scss";
 @import "Character/Pages/_modifyCharacter.scss";
 @import "Components/_crosshair.scss";
 @import "Components/_listBox.scss";
@@ -20,7 +23,16 @@ h1{
 h2 {
     color: white;
     font-size: 36px;
-    font-weight: bolder;
+}
+
+h3 {
+    color: white;
+    font-size: 24px;
+}
+
+h4 {
+    color: white;
+    font-size: 18px;
 }
 
 p {

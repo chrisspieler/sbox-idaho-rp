@@ -5,8 +5,16 @@
 @inherits IdahoRP.UI.Modal;
 
 <root>
-    <NamePicker @ref=NamePicker class="thin-border" Data=@Data/>
-    <GenderPicker @ref=GenderPicker class="thin-border" SelectedGenderId=@Data.GenderId/>
+    <div id="designSection">
+        <div id="pickerSection">
+            <NamePicker @ref=NamePicker class="thin-border" Data=@Data/>
+            <GenderPicker @ref=GenderPicker class="thin-border" SelectedGenderId=@Data.GenderId/>
+        </div>
+        <div id="customSection">
+            <CreateGender class="thin-border"/>
+        </div>
+    </div>
+
     <button class="solid" onclick="@(() => ConfirmCharacter())">Confirm Character</button>
 </root>
 

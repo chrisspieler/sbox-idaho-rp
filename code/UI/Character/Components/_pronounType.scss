@@ -1,0 +1,24 @@
+﻿PronounType {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 9px;
+
+    #textEntrySection {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3px;
+
+        & > TextEntry {
+            width: 200px;
+            margin-right: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    h4 {
+        font-style: italic;
+    }
+}

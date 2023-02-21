@@ -1,0 +1,83 @@
+﻿@using IdahoRP.Api;
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace IdahoRP.UI
+@inherits IdahoRP.UI.Modal;
+
+<root>
+    <div id="topSection">
+        <h2>Gender Settings</h2>
+        <div class="hr"/>
+        <div id="nameSection">
+            <h3>Gender Name</h3>
+            <TextEntry @ref=GenderNameEntry/>
+        </div>
+
+        <div id="isPluralSection">
+            <div id="isPluralRow">
+                <h3>Is Plural</h3>
+                <Checkbox @ref=IsPluralCheckbox/>
+            </div>
+            <p>Determines whether singular or plural verb conjugation is used for subject pronouns.</p>
+        </div>
+    </div>
+    <div id="pronounSection" class="panel">
+        <PronounType @ref=SubjectPronounPanel PronounName="Subject Pronoun"/>
+        <PronounType @ref=ObjectPronounPanel PronounName="Object Pronoun"/>
+        <PronounType @ref=ReflexivePronounPanel PronounName="Reflexive Pronoun"/>
+        <PronounType @ref=PosessiveAdjectivePanel PronounName="Posessive Adjective"/>
+        <PronounType @ref=PosessivePronounPanel PronounName="Posessive Pronoun"/>
+    </div>
+</root>
+
+@code {
+    public Gender CreatedGender { get; set; }
+    public TextEntry GenderNameEntry { get; set; }
+    public Checkbox IsPluralCheckbox { get; set; }
+    public PronounType SubjectPronounPanel { get; set;}
+    public PronounType ObjectPronounPanel { get; set; }
+    public PronounType ReflexivePronounPanel { get; set; }
+    public PronounType PosessiveAdjectivePanel { get; set; }
+    public PronounType PosessivePronounPanel { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (firstTime)
+            return;
+
+        CreatedGender = CreateExampleGender();
+        PopulateFields(CreatedGender);
+    }
+
+    public Gender CreateExampleGender()
+    {
+        return new Gender()
+        {
+            Name                = "Examplegender",
+            SubjectIsPlural     = false,
+            SubjectPronoun      = "example",
+            ObjectPronoun       = "examplem",
+            ReflexivePronoun    = "exampleself",
+            PosessiveAdjective  = "examplis",
+            PosessivePronoun    = "examplis",
+            RarityFactor        = 20f
+        };
+    }
+
+    public void PopulateFields(Gender gender)
+    {
+        SubjectPronounPanel.Pronoun = gender.SubjectPronoun;
+        SubjectPronounPanel.ExampleString = "{0} an interesting person.";
+        string subjectVerb = gender.GetSubjectVerb("is", "are");
+        SubjectPronounPanel.ExamplePronoun = p => $"{p.ToCapitalized()} {subjectVerb}";
+        ObjectPronounPanel.Pronoun = gender.ObjectPronoun;
+        ObjectPronounPanel.ExampleString = "I'd really like to meet {0}.";
+        ReflexivePronounPanel.Pronoun = gender.ReflexivePronoun;
+        ReflexivePronounPanel.ExampleString = "It looks like (name) is rather pleased with {0}.";
+        PosessiveAdjectivePanel.Pronoun = gender.PosessiveAdjective;
+        PosessiveAdjectivePanel.ExampleString = "It is {0} prerogative.";
+        PosessivePronounPanel.Pronoun = gender.PosessivePronoun;
+        PosessivePronounPanel.ExampleString = "The pleasure is all {0}.";
+    }
+}
