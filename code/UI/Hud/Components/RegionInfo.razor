@@ -1,0 +1,38 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Sandbox.UI.Panel
+@namespace IdahoRP.UI
+
+<root>
+
+</root>
+
+@code {
+    public string CurrentRegion 
+    {
+        get => _currentRegion;
+        set
+        {
+            _currentRegion = value;
+            if (_regionLabel != null)
+            {
+                _regionLabel.Delete();
+                _regionLabel = null;
+            }
+            if (value != null)
+            {
+                _regionLabel = new Label();
+                _regionLabel.Text = value;
+                AddChild(_regionLabel);
+            }
+        }
+    }
+    private string _currentRegion;
+    private Label _regionLabel;
+
+    protected override int BuildHash()
+    {
+        return CurrentRegion?.GetHashCode() ?? 0;
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using IdahoRP.Api;
 using IdahoRP.Bots;
 using IdahoRP.Entities;
+using IdahoRP.Entities.Hammer;
 using IdahoRP.Mechanics;
 using IdahoRP.Player.Components;
 using IdahoRP.UI;
@@ -20,6 +21,7 @@ public partial class Idahoid : AnimatedEntity
 	[BindComponent] public PlayerController Controller { get; }
 
 	[Net] public CitizenData Data { get; set; }
+	[Net] public MapRegion CurrentRegion { get; set; } = null;
 
 	public Idahoid()
 	{

@@ -56,7 +56,8 @@ public partial class IdahoGame : BaseGameManager
 		pawn.Respawn();
 
 		CloseWelcomePage( To.Single( cl ) );
-		pawn.ShowHud(To.Single(pawn));
+
+		pawn.ShowHud( To.Single( pawn ) );
 	}
 
 	[Event.Client.PostCamera]

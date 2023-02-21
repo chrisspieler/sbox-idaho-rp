@@ -1,0 +1,21 @@
+﻿RegionInfo {
+    justify-content: center;
+
+    & > * {
+        color: white;
+        font-size: 36px;
+        transition: all 0.1s ease-in;
+        opacity: 1;
+        transform: translateY(0px);
+
+        &:intro {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        &:outro {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+    }
+}

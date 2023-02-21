@@ -27,6 +27,16 @@ public partial class Idahoid
 	}
 
 	[ClientRpc]
+	public void UpdateRegion(string regionName)
+	{
+		// The player may receive a region update as soon as they spawn,
+		// before the UI is even initialized.
+		if ( _uiHudPage?.RegionInfo == null )
+			return;
+		_uiHudPage.RegionInfo.CurrentRegion = regionName;
+	}
+
+	[ClientRpc]
 	public void ShowLineItem( float amount, string description)
 	{
 		_uiHudPage.MoneyPanel.ShowLineItem( amount, description );
