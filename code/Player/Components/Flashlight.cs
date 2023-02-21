@@ -15,7 +15,6 @@ public partial class Flashlight : EntityComponent<Idahoid>
 	{
 		if ( !Game.IsServer )
 			return;
-		Log.Info( "Activated flashlight component :)" );
 		Spotlight = new SpotLightEntity()
 		{
 			Enabled = false,
@@ -24,22 +23,27 @@ public partial class Flashlight : EntityComponent<Idahoid>
 			Falloff = 1.0f,
 			LinearAttenuation = 0.0f,
 			QuadraticAttenuation = 1.0f,
-			Color = Color.White
+			Color = Color.White,
+			Brightness = 0.5f
 		};
 		Spotlight.SetParent( Entity );
 		Spotlight.LocalPosition = Spotlight
 			.LocalPosition
 			.WithZ( 72f )
-			.WithX( 10f );
+			.WithX( 15f );
 	}
 
 	public void Simulate()
 	{
-		Spotlight.Rotation = Entity.EyeRotation;
+		var eyePitch = Entity.EyeRotation.Pitch();
+		if ( eyePitch != float.NaN )
+		{
+			var currentAngles = Spotlight.Rotation.Angles();
+			Spotlight.Rotation = Rotation.From( currentAngles.WithPitch( eyePitch ) ).Normal;
+		}
 
 		if ( Input.Pressed( InputButton.Flashlight ) )
 		{
-			Log.Info( "Pressed flashlight button" );
 			Spotlight.Enabled = !Spotlight.Enabled;
 		}
 	}

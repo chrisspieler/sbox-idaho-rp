@@ -52,6 +52,6 @@ public partial class Idahoid : AnimatedEntity
 	internal Angles CalculateLookInput(Angles input )
 	{
 		var lookInput = (LookInput + input).Normal;
-		return lookInput.WithPitch( lookInput.pitch.Clamp( -90f, 90f ) );
+		return lookInput.WithPitch( lookInput.pitch.Clamp( -89f, 89f ) );
 	}
 }

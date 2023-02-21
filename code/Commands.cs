@@ -66,7 +66,7 @@ public static partial class Commands
 		//	return;
 		//}
 		CitizenData.GetData( steamId ).Name = name;
-		Log.Info( $"{ConsoleSystem.Caller.Client} - Name set to \"{name}\"." );
+		Log.Trace( $"{ConsoleSystem.Caller.Client} - Name set to \"{name}\"." );
 	}
 
 	[ConCmd.Server("setgender")]
@@ -87,7 +87,7 @@ public static partial class Commands
 			return;
 		}
 		CitizenData.GetData( client.SteamId ).Gender = genderRes;
-		Log.Info( $"{client} - Gender set to \"{genderRes.Name}\"." );
+		Log.Trace( $"{client} - Gender set to \"{genderRes.Name}\"." );
 	}
 
 	[ConCmd.Server("setgender")]
