@@ -3,12 +3,12 @@
     align-items: center;
     width: 100%;
 
-    #designSection {
+    & > #designSection {
         flex-direction: row;
         justify-content: center;
         width: 100%;
 
-        #pickerSection {
+        & > #pickerSection {
             flex-direction: column;
             margin-right: 50px;
 
@@ -21,8 +21,14 @@
             }
         }
 
-        #customSection {
+        & > #customSection {
             margin-left: 50px;
         }
+    }
+
+    & > #buttonRow {
+        width: 100%;
+        margin-right: 50px;
+        justify-content: flex-end;
     }
 }

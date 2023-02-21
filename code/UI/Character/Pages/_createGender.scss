@@ -1,11 +1,10 @@
 ﻿CreateGender {
     flex-direction: column;
+    justify-content: space-between;
 
     h2 {
         justify-content: center;
     }
-
-
 
     #topSection {
         flex-direction: column;
@@ -13,7 +12,6 @@
 
         #nameSection {
             align-items: center;
-            padding: 5px;
 
             & > h3 {
                 margin-right: 5px;
@@ -54,5 +52,19 @@
     #pronounSection {
         flex-direction: column;
         padding: 5px;
+    }
+
+    #buttonRow {
+        justify-content: space-between;
+
+        button {
+            background-color: #761100;
+            align-items: center;
+
+            .icon {
+                font-size: 36px;
+                margin-right: 10px;
+            }
+        }
     }
 }

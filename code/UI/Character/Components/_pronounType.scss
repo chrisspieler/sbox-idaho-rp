@@ -7,8 +7,8 @@
     #textEntrySection {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 3px;
+        align-items: flex-end;
+        margin-bottom: 5px;
 
         & > TextEntry {
             width: 200px;

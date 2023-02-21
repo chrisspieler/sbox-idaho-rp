@@ -14,6 +14,9 @@
 @import "Hud/Components/_regionInfo.scss";
 @import "Welcome/_welcomePage.scss";
 
+$idaho-blue: #003776;
+$idaho-red: #761100;
+
 h1{
     color: white;
     font-size: 72px;
@@ -103,7 +106,7 @@ button {
     }
 
     &.solid {
-        background-color: color(0, 0.215686, 0.462745, 1);
+        background-color: $idaho-blue;
         color: white;
     }
 
