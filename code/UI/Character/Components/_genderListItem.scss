@@ -1,0 +1,28 @@
+﻿GenderListItem {
+    justify-content: flex-start;
+    align-items: center;
+
+    .icon {
+        font-size: 28px;
+    }
+
+    &:not(.built-in) .icon {
+        color: color(0,0,0,0);
+    }
+    
+    &.built-in .icon {
+        color: white;
+    }
+
+    .gender-name {
+        margin: 0px, 5px, 0px, 5px;
+        font-size: 26px;
+        color: white;
+    }
+
+    .short-pnouns {
+        margin: 0px, 5px, 0px, auto;
+        font-size: 20px;
+        color: lightgray;
+    }
+}

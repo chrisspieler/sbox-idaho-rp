@@ -6,7 +6,11 @@ namespace IdahoRP;
 internal static class StringExtensions
 {
 	public static string ToCapitalized( this string str )
-		=> str[0].ToString().ToUpper() + str.Substring( 1 );
+	{
+		if ( string.IsNullOrWhiteSpace( str ) )
+			return str;
+		return str[0].ToString().ToUpper() + str.Substring( 1 );
+	}
 
 	/// <summary>
 	/// Returns true if all of the characters in the provided string <c>str</c> are

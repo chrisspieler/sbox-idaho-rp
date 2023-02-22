@@ -1,8 +1,9 @@
 ﻿@import "Base/Sandbox/_checkbox.scss";
+@import "Character/Components/_genderListItem.scss";
 @import "Character/Components/_genderPicker.scss";
 @import "Character/Components/_namePicker.scss";
 @import "Character/Components/_pronounType.scss";
-@import "Character/Pages/_createGender.scss";
+@import "Character/Pages/_genderCreator.scss";
 @import "Character/Pages/_modifyCharacter.scss";
 @import "Components/_crosshair.scss";
 @import "Components/_listBox.scss";
@@ -83,9 +84,9 @@ TextEntry {
 
 button {
     flex-direction: row;
-    padding: 20px;
-    border-radius: 8px;
     justify-content: center;
+    padding: 15px;
+    border-radius: 8px;
     font-family: Arial;
     font-size: 28px;
     cursor: pointer;

@@ -1,0 +1,14 @@
+﻿@namespace IdahoRP.UI
+
+@inherits Sandbox.UI.Panel;
+
+<root class="list-item">
+    <div class="icon">lock</div>
+    <p class="gender-name">@GenderName</p>
+    <p class="short-pnouns">@ShortPronouns</p>
+</root>
+
+@code {
+    public string GenderName { get; set; }
+    public string ShortPronouns { get; set; }
+}

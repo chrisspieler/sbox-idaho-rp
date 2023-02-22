@@ -60,4 +60,23 @@ public class Gender : GameResource
 			? $"{pluralVerb}"
 			: $"{singularVerb}";
 	}
+
+	/// <summary>
+	/// Create a gender with example pronouns.
+	/// </summary>
+	/// <returns></returns>
+	public static Gender CreateExampleGender()
+	{
+		return new Gender()
+		{
+			Name = "New Gender",
+			SubjectIsPlural = false,
+			SubjectPronoun = "example",
+			ObjectPronoun = "examplem",
+			ReflexivePronoun = "exampleself",
+			PosessiveAdjective = "examplis",
+			PosessivePronoun = "examplis",
+			RarityFactor = 20f
+		};
+	}
 }

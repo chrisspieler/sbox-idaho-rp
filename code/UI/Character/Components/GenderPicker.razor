@@ -1,7 +1,9 @@
-﻿@using IdahoRP.Api;
+﻿@using System;
 @using System.Collections.Generic
 @using System.Linq;
 @using Sandbox;
+@using IdahoRP.Api;
+@using Sandbox.UI;
 
 @namespace IdahoRP.UI
 
@@ -11,14 +13,7 @@
     <h2>Select your gender</h2>
     <div class="hr"/>
     <ListBox @ref="GenderList" id="genderList">
-        @foreach(var gender in _genders)
-        {
-            <div id="@gender.ResourceId" class="list-item">
-                <p class="gender-name">@(gender.Name.ToCapitalized())</p>
-                <p class="short-pnouns">@(gender.SimplePronouns())</p>
-            </div>
-        }
-        <button id="btnAddGender" class="clear noselect">
+        <button @ref=AddGenderButton id="btnAddGender" onclick=@(_ => NewGender()) class="clear noselect">
             <div class="icon">add</div>
             <p>Add Gender</p>
         </button>
@@ -27,12 +22,26 @@
 
 @code {
     public ListBox GenderList { get; set; }
-    private IEnumerable<Gender> _genders;
-    public int SelectedGenderId;
+    public Panel AddGenderButton { get; set; }
+    private Dictionary<int, Gender> _genders = new();
+    public int SelectedGenderId
+    {
+        get => _selectedGenderId;
+        set
+        {
+            _selectedGenderId = value;
+            OnGenderSelcted?.Invoke(this, _genders[value]);
+        }
+    }
+    private int _selectedGenderId;
+
+    public event EventHandler<Gender> OnGenderSelcted;
 
     public GenderPicker()
     {
-        _genders = ResourceLibrary.GetAll<Gender>();
+        _genders = ResourceLibrary
+            .GetAll<Gender>()
+            .ToDictionary(g => g.ResourceId);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -40,8 +49,13 @@
         if (!firstTime)
             return;
 
+        foreach(KeyValuePair<int, Gender> kvp in _genders)
+        {
+            AddGender(kvp.Value);
+        }
+
         GenderList.OnSelectionChanged += (s, p) => SelectedGenderId = int.Parse(p.Id);
-        var matchingGender = GenderList.Children.FirstOrDefault(c => c.Id == SelectedGenderId.ToString());
+        var matchingGender = GetGenderListItem(SelectedGenderId);
         // If no gender ID matches the player ID, use the first one instead
         if (matchingGender == null)
         {
@@ -49,5 +63,44 @@
             matchingGender = GenderList.Children.First();
         }
         GenderList.SelectedItem = matchingGender;
+    }
+
+    private Panel GetGenderListItem(int genderId)
+    {
+        return GenderList
+            .Children
+            .FirstOrDefault(
+                c => c.Id == genderId.ToString()
+            );
+    }
+
+    public void NewGender()
+    {
+        var newGender = Gender.CreateExampleGender();
+        _genders[newGender.ResourceId] = newGender;
+        AddGender(newGender);
+        GenderList.SelectedItem = GetGenderListItem(newGender.ResourceId);
+    }
+
+    public void AddGender(Gender gender)
+    {
+        var listItem = new GenderListItem
+        {
+            Id              = gender.ResourceId.ToString(),
+            GenderName      = gender.Name,
+            ShortPronouns   = gender.SimplePronouns()
+        };
+        if (gender.ResourceId != 0)
+        {
+            listItem.AddClass("built-in");
+        }
+        GenderList.AddChild(listItem);
+        // Make sure the add gender button is at the bottom of the list at all times.
+        GenderList.SetChildIndex(AddGenderButton, GenderList.ChildrenCount - 1);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(GenderList?.ChildrenCount, SelectedGenderId);
     }
 }

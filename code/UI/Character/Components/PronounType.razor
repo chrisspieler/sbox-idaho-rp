@@ -10,7 +10,7 @@
         <h3>@PronounName</h3>
         <TextEntry @ref=PronounTextEntry/>
     </div>
-    <h4>@string.Format(ExampleString, ExamplePronoun(Pronoun))</h4>
+    <h4>@GetExampleString()</h4>
 </root>
 
 @code {
@@ -21,10 +21,43 @@
         get => PronounTextEntry.Text;
         set
         {
+            if (PronounTextEntry == null)
+            {
+                _initPronoun = value;
+                return;
+            }
             PronounTextEntry.Text = value;
         }
     }
+    private string _initPronoun;
     public string ExampleString { get; set; }
 
     private TextEntry PronounTextEntry { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        if (_initPronoun != null)
+        {
+            PronounTextEntry.Text = _initPronoun;
+        }
+    }
+
+    private string GetExampleString()
+    {
+        if (ExampleString == null || ExamplePronoun == null || Pronoun == null)
+        {
+            return null;
+        }
+        return string.Format(ExampleString, ExamplePronoun(Pronoun));
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(ExamplePronoun, PronounName, Pronoun, ExampleString);
+    }
 }

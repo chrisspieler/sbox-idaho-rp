@@ -42,8 +42,8 @@ namespace IdahoRP.UI
 			SelectedItem = selectedItems.Count() switch
 			{
 				> 1 => throw new InvalidOperationException( $"{nameof( ListBox )} does not support multiple selection yet." ),
-				1 => selectedItems.First(),
-				<= 0 => Children.First(c => !c.HasClass("noselect")),
+				1 => selectedItems.FirstOrDefault(),
+				<= 0 => Children.FirstOrDefault(c => !c.HasClass("noselect")),
 			};
 			_selectionIsInitialized = true;
 		}

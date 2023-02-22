@@ -11,7 +11,7 @@
             <GenderPicker @ref=GenderPicker class="thin-border" SelectedGenderId=@Data.GenderId/>
         </div>
         <div id="customSection">
-            <CreateGender class="thin-border"/>
+            <GenderCreator @ref=GenderCreator class="thin-border"/>
         </div>
     </div>
     <div id="buttonRow">
@@ -22,7 +22,18 @@
 @code {
     public NamePicker NamePicker { get; set; }
     public GenderPicker GenderPicker { get; set; }
+    public GenderCreator GenderCreator { get; set; }
     public CitizenData Data { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        GenderPicker.OnGenderSelcted += (s, e) => GenderCreator.CurrentGender = e;
+    }
 
     public void ConfirmCharacter()
     {
